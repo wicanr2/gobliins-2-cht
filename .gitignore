@@ -1,20 +1,16 @@
-# [HARD] 遊戲資源一律不入庫
+# [HARD] 遊戲資源、CD 映像、音軌一律不進版控
 game/
 *.stk
 *.STK
-*.lic
-*.trk
-*.flac
-*.BIN
+*.bin
 *.cue
+*.flac
 *.ROM
-# 建置與交付產物
-build/
 dist-all/
-dist-patch/
+build/
 out/
 scummvm-src/
-scummvm-win/
-*.AppImage
-*.mp4
-*.gif
+
+# 各批譯文要進版控（out/ 那條是給 workplace 的暫存目錄用的）
+!translation/out/
+!translation/out/*.tsv

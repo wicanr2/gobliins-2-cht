@@ -1,0 +1,250 @@
+name: build-macos
+
+# 頑皮小精靈2 Gobliins 2 繁中化 — macOS universal(arm64+x86_64)ScummVM.app。
+#
+# 不能在 Linux 交叉編譯 macOS（Apple SDK EULA + codesign 只在 macOS host），
+# 借 macos-14(Apple Silicon) runner build。改自本作者 SQ1 專案已驗證可用的
+# build-macos.yml，**但有三處必須改**（差異就是這個專案的重點）：
+#
+#   ① 引擎檢查是 ENABLE_GOB，不是 ENABLE_SCI/AGI。
+#      移植時忘了改這行的話，會在「引擎其實沒編進去」的情況下一路綠燈跑完。
+#   ② [HARD] FLAC 不能關。這一版的音樂是 CD 紅皮書音軌，玩家餵的是 track1.flac；
+#      SQ1 的 LEAN_FLAGS 有 --disable-flac，照抄過來就會編出一個「沒有音樂」的版本，
+#      而且畫面完全正常、測不出來。所以自源碼編 libFLAC 兩弧，
+#      並在各自的 make 之前裝進 brew prefix（scummvm-static 只認那裡的 .a）。
+#   ③ 不做 MT-32。engines/gob 底下沒有任何 MidiDriver，開了也沒用。
+#
+# [HARD] ScummVM configure 不是 autoconf 友善，CXXFLAGS/LDFLAGS 只能當環境變數餵。
+# [HARD] CXXFLAGS 一律帶 -fstack-protector-strong。clang 在 arm64 才會擋下堆疊溢位，
+#        Linux/Windows build 沒開的話同一份 bug 會靜靜跑過去、三平台測試全綠。
+# [HARD] 不用 brew 的 sdl2（2026 起是 sdl2-compat shim，runtime 才 dlopen libSDL3，
+#        打包抓不到 → 玩家端黑畫面）。改自源碼編 pinned 真 SDL2。
+# universal 用「每弧各編一次 + lipo -create」，不用單次雙 -arch
+#        （configure 用 uname 判 host cpu，只給 -arch 它仍判 aarch64）。
+# [HARD] macOS 只有 bash 3.2，避開 ${VAR^^}/${VAR,,}/declare -A/mapfile。
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*-macos']
+
+env:
+  SDL_VER: "2.30.9"
+  FLAC_VER: "1.4.3"
+  MIN_OS: "11.0"
+  # GOB-only 精簡：關掉用不到的外部媒體/格式/網路庫。
+  # 為什麼連 png / zlib 都要關：scummvm-static 會去 /opt/homebrew/lib 找 libpng.a、
+  # libz.a，而 brew 只給 .dylib —— 開著就是連結失敗。gob 的 STK 用自家 LZ77，不需要 zlib。
+  # **flac 不在此列**（見檔頭②），它是 CD 音樂的必要條件，另外處理。
+  LEAN_FLAGS: >-
+    --disable-tremor --disable-mad
+    --disable-faad --disable-mpcdec --disable-openmpt --disable-mikmod
+    --disable-fluidsynth --disable-fluidlite --disable-sonivox
+    --disable-theoradec --disable-vpx --disable-a52
+    --disable-png --disable-jpeg --disable-gif --disable-freetype2 --disable-fribidi
+    --disable-zlib
+    --disable-libcurl --disable-cloud --disable-enet --disable-sdlnet
+    --disable-discord --disable-sparkle --disable-lua
+    --disable-tts --disable-taskbar --disable-system-dialogs --disable-system-printing
+
+jobs:
+  macos-universal:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下載 SDL2 與 libFLAC 原始碼（pinned）
+        run: |
+          set -euo pipefail
+          curl -fsSL -o "$RUNNER_TEMP/SDL2.tar.gz" \
+            "https://github.com/libsdl-org/SDL/releases/download/release-${SDL_VER}/SDL2-${SDL_VER}.tar.gz"
+          curl -fsSL -o "$RUNNER_TEMP/flac.tar.xz" \
+            "https://downloads.xiph.org/releases/flac/flac-${FLAC_VER}.tar.xz"
+
+      - name: 自編 SDL2 + libFLAC — arm64（native）
+        run: |
+          set -euo pipefail
+          export CFLAGS="-arch arm64 -mmacosx-version-min=${MIN_OS}"
+          export CXXFLAGS="$CFLAGS" LDFLAGS="$CFLAGS"
+
+          rm -rf "$RUNNER_TEMP/sdl-b-arm64"; mkdir -p "$RUNNER_TEMP/sdl-b-arm64"
+          tar xf "$RUNNER_TEMP/SDL2.tar.gz" -C "$RUNNER_TEMP/sdl-b-arm64" --strip-components=1
+          cd "$RUNNER_TEMP/sdl-b-arm64"
+          ./configure --prefix="$RUNNER_TEMP/sdl-arm64" --without-x
+          make -j"$(sysctl -n hw.ncpu)"; make install
+          # 防呆：真 SDL2 約 2MB，sdl2-compat shim 只有 0.5MB 左右
+          SIZE=$(stat -f%z "$RUNNER_TEMP/sdl-arm64/lib/libSDL2-2.0.0.dylib")
+          echo "arm64 libSDL2 size=$SIZE"
+          [ "$SIZE" -gt 1000000 ] || { echo "### 疑似 shim，體積過小 ###"; exit 1; }
+          otool -L "$RUNNER_TEMP/sdl-arm64/lib/libSDL2-2.0.0.dylib" | grep -qi SDL3 && { echo "### 混入 SDL3 ###"; exit 1; } || true
+
+          rm -rf "$RUNNER_TEMP/flac-b-arm64"; mkdir -p "$RUNNER_TEMP/flac-b-arm64"
+          tar xf "$RUNNER_TEMP/flac.tar.xz" -C "$RUNNER_TEMP/flac-b-arm64" --strip-components=1
+          cd "$RUNNER_TEMP/flac-b-arm64"
+          ./configure --prefix="$RUNNER_TEMP/flac-arm64" --disable-shared --enable-static \
+            --disable-ogg --disable-programs --disable-examples --disable-doxygen-docs
+          make -j"$(sysctl -n hw.ncpu)"; make install
+          [ -s "$RUNNER_TEMP/flac-arm64/lib/libFLAC.a" ] || { echo "### libFLAC.a 沒產出 ###"; exit 1; }
+
+      - name: 自編 SDL2 + libFLAC — x86_64（arch -x86_64 走 Rosetta，configure 的 run-test 需要）
+        run: |
+          set -euo pipefail
+          arch -x86_64 /bin/bash -c "
+            set -euo pipefail
+            export CFLAGS='-arch x86_64 -mmacosx-version-min=${MIN_OS}'
+            export CXXFLAGS=\"\$CFLAGS\" LDFLAGS=\"\$CFLAGS\"
+
+            rm -rf '$RUNNER_TEMP/sdl-b-x86_64'; mkdir -p '$RUNNER_TEMP/sdl-b-x86_64'
+            tar xf '$RUNNER_TEMP/SDL2.tar.gz' -C '$RUNNER_TEMP/sdl-b-x86_64' --strip-components=1
+            cd '$RUNNER_TEMP/sdl-b-x86_64'
+            ./configure --prefix='$RUNNER_TEMP/sdl-x86_64' --without-x
+            make -j\"\$(sysctl -n hw.ncpu)\"; make install
+
+            rm -rf '$RUNNER_TEMP/flac-b-x86_64'; mkdir -p '$RUNNER_TEMP/flac-b-x86_64'
+            tar xf '$RUNNER_TEMP/flac.tar.xz' -C '$RUNNER_TEMP/flac-b-x86_64' --strip-components=1
+            cd '$RUNNER_TEMP/flac-b-x86_64'
+            ./configure --prefix='$RUNNER_TEMP/flac-x86_64' --disable-shared --enable-static \
+              --disable-ogg --disable-programs --disable-examples --disable-doxygen-docs
+            make -j\"\$(sysctl -n hw.ncpu)\"; make install
+          "
+          SIZE=$(stat -f%z "$RUNNER_TEMP/sdl-x86_64/lib/libSDL2-2.0.0.dylib")
+          echo "x86_64 libSDL2 size=$SIZE"
+          [ "$SIZE" -gt 1000000 ] || { echo "### 疑似 shim ###"; exit 1; }
+          [ -s "$RUNNER_TEMP/flac-x86_64/lib/libFLAC.a" ] || { echo "### libFLAC.a 沒產出 ###"; exit 1; }
+
+      - name: clone pinned ScummVM 並套繁中化 patch（兩份獨立 checkout，各編一個弧）
+        run: |
+          set -euo pipefail
+          UPSTREAM="$(cat patches/UPSTREAM_COMMIT.txt)"
+          echo ">> pinned upstream: $UPSTREAM"
+          # [HARD] UPSTREAM_COMMIT.txt 只能放裸的 commit hash —— 這裡直接拿去當 git ref，
+          #        後面加中文說明的話這一步就會失敗。
+          # core.autocrlf=false：避免 CRLF 轉換讓 patch -p1 套不上
+          git clone --config core.autocrlf=false --config core.eol=lf \
+            https://github.com/scummvm/scummvm.git "$RUNNER_TEMP/scummvm-arm64"
+          git -C "$RUNNER_TEMP/scummvm-arm64" fetch --depth 1 origin "$UPSTREAM" 2>/dev/null \
+            || git -C "$RUNNER_TEMP/scummvm-arm64" fetch origin
+          git -C "$RUNNER_TEMP/scummvm-arm64" checkout -f "$UPSTREAM"
+          bash tools/apply_patches.sh "$RUNNER_TEMP/scummvm-arm64"
+          rm -rf "$RUNNER_TEMP/scummvm-x86_64"
+          cp -a "$RUNNER_TEMP/scummvm-arm64" "$RUNNER_TEMP/scummvm-x86_64"
+
+      # [HARD] scummvm-static 在 macOS 上是去 $_prefix/lib（＝ /opt/homebrew/lib）撈靜態 .a
+      # 的，--with-flac-prefix 只影響標頭偵測、**不影響連結路徑**（第一次跑就是死在這裡：
+      # clang: no such file or directory: '/opt/homebrew/lib/libFLAC.a'）。
+      # 而 brew 根本不提供 libFLAC.a。解法是把自編的那一弧「裝進」brew prefix，
+      # 讓 configure 與連結兩邊看到同一份。runner 是拋棄式的，覆蓋掉沒關係。
+      # 兩弧必須各自在自己的 make 之前裝，不能一次裝完 —— 後裝的會蓋掉前一弧，
+      # 拿錯架構去連結會出現一堆看不懂的 undefined symbol。
+      - name: 安裝 arm64 的 libFLAC 到 brew prefix
+        run: |
+          set -euo pipefail
+          sudo cp "$RUNNER_TEMP/flac-arm64/lib/libFLAC.a" /opt/homebrew/lib/
+          sudo mkdir -p /opt/homebrew/include
+          sudo cp -R "$RUNNER_TEMP/flac-arm64/include/FLAC" /opt/homebrew/include/
+          lipo -info /opt/homebrew/lib/libFLAC.a | grep -q arm64 \
+            || { echo "### /opt/homebrew/lib/libFLAC.a 不是 arm64 ###"; exit 1; }
+
+      - name: configure + make — arm64（native）
+        working-directory: ${{ runner.temp }}/scummvm-arm64
+        run: |
+          set -euo pipefail
+          export CXXFLAGS="-arch arm64 -mmacosx-version-min=${MIN_OS} -fstack-protector-strong"
+          export LDFLAGS="$CXXFLAGS"
+          ./configure --disable-all-engines --enable-engine=gob --disable-detection-full \
+            --enable-release $LEAN_FLAGS \
+            --with-sdl-prefix="$RUNNER_TEMP/sdl-arm64"
+          grep -q "^ENABLE_GOB" config.mk   || { echo "### gob engine 未編入(arm64) ###"; exit 12; }
+          grep -q "^SDL_BACKEND = 1" config.mk || { echo "### SDL 未偵測到(arm64) ###"; exit 13; }
+          # [HARD] 沒有 FLAC 就沒有 CD 音樂，而畫面完全正常、玩家只會覺得「怎麼沒聲音」
+          grep -q "^USE_FLAC = 1" config.mk || { echo "### FLAC 未編入(arm64)，CD 音樂會沒聲音 ###"; exit 15; }
+          make -j"$(sysctl -n hw.ncpu)" scummvm-static
+
+      - name: 換裝 x86_64 的 libFLAC 到 brew prefix（覆蓋掉 arm64 那份）
+        run: |
+          set -euo pipefail
+          sudo cp "$RUNNER_TEMP/flac-x86_64/lib/libFLAC.a" /opt/homebrew/lib/
+          lipo -info /opt/homebrew/lib/libFLAC.a | grep -q x86_64 \
+            || { echo "### /opt/homebrew/lib/libFLAC.a 不是 x86_64 ###"; exit 1; }
+
+      - name: configure + make — x86_64（Rosetta）
+        working-directory: ${{ runner.temp }}/scummvm-x86_64
+        run: |
+          set -euo pipefail
+          arch -x86_64 /bin/bash -c "
+            set -euo pipefail
+            export CXXFLAGS='-arch x86_64 -mmacosx-version-min=${MIN_OS} -fstack-protector-strong'
+            export LDFLAGS=\"\$CXXFLAGS\"
+            ./configure --disable-all-engines --enable-engine=gob --disable-detection-full \
+              --enable-release $LEAN_FLAGS \
+              --with-sdl-prefix='$RUNNER_TEMP/sdl-x86_64'
+            grep -q '^ENABLE_GOB' config.mk   || { echo '### gob engine 未編入(x86_64) ###'; exit 12; }
+            grep -q '^SDL_BACKEND = 1' config.mk || { echo '### SDL 未偵測到(x86_64) ###'; exit 13; }
+            grep -q '^USE_FLAC = 1' config.mk || { echo '### FLAC 未編入(x86_64) ###'; exit 15; }
+            make -j\"\$(sysctl -n hw.ncpu)\" scummvm-static
+          "
+
+      - name: lipo 合併 universal，make bundle 組 ScummVM.app
+        working-directory: ${{ runner.temp }}/scummvm-arm64
+        run: |
+          set -euo pipefail
+          lipo -create \
+            "${{ runner.temp }}/scummvm-arm64/scummvm-static" \
+            "${{ runner.temp }}/scummvm-x86_64/scummvm-static" \
+            -output scummvm-static-universal
+          lipo -info scummvm-static-universal | grep -q arm64
+          lipo -info scummvm-static-universal | grep -q x86_64
+          make bundle
+          # bundle-pack 塞進去的是 arm64-only 的 scummvm-static，換成 universal
+          cp scummvm-static-universal ScummVM.app/Contents/MacOS/scummvm
+          chmod 755 ScummVM.app/Contents/MacOS/scummvm
+
+      - name: lipo SDL2 dylib、修 install_name、ad-hoc 簽章
+        working-directory: ${{ runner.temp }}/scummvm-arm64
+        run: |
+          set -euo pipefail
+          APP=ScummVM.app
+          BIN="$APP/Contents/MacOS/scummvm"
+          mkdir -p "$APP/Contents/Frameworks"
+          FW="$APP/Contents/Frameworks/libSDL2-2.0.0.dylib"
+          lipo -create \
+            "$RUNNER_TEMP/sdl-arm64/lib/libSDL2-2.0.0.dylib" \
+            "$RUNNER_TEMP/sdl-x86_64/lib/libSDL2-2.0.0.dylib" \
+            -output "$FW"
+          install_name_tool -id "@executable_path/../Frameworks/libSDL2-2.0.0.dylib" "$FW"
+          # 兩弧各自 build 時連到不同 prefix，分別改到同一個相對路徑
+          # （對不到的那條 install_name_tool 靜默失敗，不中止）
+          install_name_tool -change "$RUNNER_TEMP/sdl-arm64/lib/libSDL2-2.0.0.dylib"  "@executable_path/../Frameworks/libSDL2-2.0.0.dylib" "$BIN" || true
+          install_name_tool -change "$RUNNER_TEMP/sdl-x86_64/lib/libSDL2-2.0.0.dylib" "@executable_path/../Frameworks/libSDL2-2.0.0.dylib" "$BIN" || true
+          install_name_tool -change "@rpath/libSDL2-2.0.0.dylib" "@executable_path/../Frameworks/libSDL2-2.0.0.dylib" "$BIN" || true
+          codesign --force --sign - "$FW"
+          codesign --force --deep --sign - "$APP"
+
+          echo "=== 驗證：主程式與 SDL2 都要雙弧 ==="
+          lipo -info "$BIN" | grep -q arm64 && lipo -info "$BIN" | grep -q x86_64
+          lipo -info "$FW"  | grep -q arm64 && lipo -info "$FW"  | grep -q x86_64
+          echo "=== 驗證：不得殘留 build 期絕對路徑 ==="
+          if otool -L "$BIN" | grep -E "$RUNNER_TEMP|/Users/runner"; then
+            echo "### 仍有 build 期依賴殘留 ###"; exit 1
+          fi
+          echo OK
+
+      - name: 打包 engine-only 中間產物
+        working-directory: ${{ runner.temp }}/scummvm-arm64
+        run: |
+          set -euo pipefail
+          mkdir -p "$GITHUB_WORKSPACE/dist-macos"
+          tar czf "$GITHUB_WORKSPACE/dist-macos/engine-macos-universal.tar.gz" ScummVM.app
+
+      - name: 注入中文資料 → 產最終 tar.gz
+        env:
+          # 指紋要從 runner 上「實際編出這顆 binary 的那棵樹」算，不能拿本機的樹
+          # 事後補算 —— 那只是代理值，兩邊一旦不同步就會產生看起來對的假指紋。
+          ENGINE_SRC: ${{ runner.temp }}/scummvm-arm64
+        run: |
+          bash tools/package_macos_data.sh dist-macos/engine-macos-universal.tar.gz dist-macos/out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gobliins2-cht-macos
+          path: dist-macos/out/*

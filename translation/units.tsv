@@ -1,0 +1,479 @@
+U0001	14	7x2	AH! what a sad business...	AH! TRISTE AFFAIRE EN VéRITé...	DEMOUSA#0,DEMOUSA0#0,INTRO#0,INTRO0#0
+U0002	14	7x2	a delicate child snatched from his home by a demon!	un fragile enfant enlevé de son foyer par un démon!	DEMOUSA#1,DEMOUSA0#1,INTRO#1,INTRO0#1
+U0003	14	7x2	the unbearable anguish of his poor father...	la douleur insupportable d'un père effondré...	DEMOUSA#2,DEMOUSA0#2,INTRO#2,INTRO0#2
+U0004	14	7x2	o flesh of my flesh, my own blood, my only son...	ô chair de ma chair, sang de mon sang, mon unique fils...	DEMOUSA#3,DEMOUSA0#3,INTRO#3,INTRO0#3
+U0005	14	7x2	a cursed castle standing in a hostile country inhabited by a	un château maudit ancré dans une contrée hostile	DEMOUSA#4,DEMOUSA0#4,INTRO#4,INTRO0#4
+U0006	14	7x2	dreadful demon who's the incarnation of all evil!	habité par un démon répugnant qui INCARNE le mal...	DEMOUSA#5,DEMOUSA0#5,INTRO#5,INTRO0#5
+U0007	14	7x2	but all is not lost!	mais tout n'est pas perdu!	DEMOUSA#6,INTRO#6,INTRO0#6,USA#6
+U0008	14	7x2	because two outstanding heroes will try theirluck!	car deux héros d'envergure vont tenter l'aventure!	DEMOUSA#7,DEMOUSA0#7,INTRO#7,INTRO0#7
+U0009	76	19x4	GOBLIINS ERROR!		DEMOUSA#8
+U0010	64	16x4	Consultez la grille de couleurs fournie avec le logiciel et tapez le chiffre correspondant à la couleur de la case: 1 - rouge 2 - noir 3 - jaune 4 - vert 5 - bleu 6 - blanc 7 - gris 8 - mauve	Consultez la grille de couleurs fournie avec le logiciel et tapez le chiffre correspondant à la couleur de la case: 1 - rouge 2 - noir 3 - jaune 4 - vert 5 - bleu 6 - blanc 7 - gris 8 - mauve	DEMOUSA#9,DEMOUSA0#9,INTRO0#9,USA0#9
+U0011	64	16x4	Consult the color chart in the box and type the number corresponding with the color of the space: 1 - red 2 - black 3 - yellow 4 - green 5 - blue 6 - white 7 - grey 8 - magenta		DEMOUSA#10
+U0012	64	16x4	Schauen Sie auf dem der Software beiliegenden Farbraster nach und tippen Sie die der jeweiligen Farbe zugehörige Zahl ein: 1 - rot 2 - schwarz 3 - gelb 4 - grün 5 - blau 6 - weiß 7 - grau 8 - malvenfarbig	Schauen Sie auf dem der Software beiliegenden Farbraster nach und tippen Sie die der jeweiligen Farbe zugehörige Zahl ein: 1 - rot 2 - schwarz 3 - gelb 4 - grün 5 - blau 6 - weiß 7 - grau 8 - malvenfarbig	DEMOUSA#11,DEMOUSA0#11,INTRO0#11,USA0#11
+U0013	68	17x4	Consultate la tabella colori contenuta nella scatola e digitate il numero corrispondente Lo spazio: 1 - rosso 2 - nero 3 - giallo 4 - verde 5 - blu 6 - bianco 7 - grigio 8 - malva	Consultate la tabella colori contenuta nella scatola e digitate il numero corrispondente Lo spazio: 1 - rosso 2 - nero 3 - giallo 4 - verde 5 - blu 6 - bianco 7 - grigio 8 - malva	DEMOUSA#12,DEMOUSA0#12,INTRO0#12,USA0#12
+U0014	64	16x4	Mire en la carta de colores adjunto al software y escriba el número correspondiente al campo de color: 1 - rojo 2 - negro 3 - amarillo 4 - verde 5 - azul 6 - blanco 7 - gris 8 - malva	Mire en la carta de colores adjunto al software y escriba el número correspondiente al campo de color: 1 - rojo 2 - negro 3 - amarillo 4 - verde 5 - azul 6 - blanco 7 - gris 8 - malva	DEMOUSA#13,DEMOUSA0#13,INTRO0#13,USA0#13
+U0015	14	7x2	but all is notlost!	but all is not lost!	DEMOUSA0#6
+U0016	76	19x4	GOBLIINS ERROR !	GOBLIINS ERROR!	DEMOUSA0#8,INTRO0#8,USA0#8
+U0017	64	16x4	Consult the colour chart in the box and type the number corresponding with the colour of the space: 1 - red 2 - black 3 - yellow 4 - green 5 - blue 6 - white 7 - grey 8 - magenta	Consult the color chart in the box and type the number corresponding with the color of the space: 1 - red 2 - black 3 - yellow 4 - green 5 - blue 6 - white 7 - grey 8 - magenta	DEMOUSA0#10,INTRO0#10,USA0#10
+U0018	19	19x1		Langue	ESSAI#2
+U0019	19	19x1		Oreille	ESSAI#3
+U0020	19	19x1	Fingus	Fingus	ESSAI#4,GOB00#5,GOB01#13,GOB02#11
+U0021	19	19x1		Trou	ESSAI#5
+U0022	19	19x1		Bouton	ESSAI#6
+U0023	19	19x1	Winkle	Winkle	ESSAI#7,GOB00#24,GOB01#12,GOB02#9
+U0024	19	19x1	Orifice	Orifice	ESSAI#8,GOB15#8
+U0025	19	19x1		Corniche	ESSAI#9
+U0026	19	19x1		Bouffon	ESSAI#10
+U0027	19	19x1		Poivre	ESSAI#11
+U0028	19	19x1		Cafard	ESSAI#12
+U0029	19	19x1		Porte	ESSAI#13
+U0030	19	19x1		Punaises	ESSAI#14
+U0031	19	19x1		Balai	ESSAI#15
+U0032	19	19x1		Tabouret	ESSAI#16
+U0033	19	19x1	Lime	Lime	ESSAI#17,GOB19#1,GOB20#2
+U0034	19	19x1		Elixir de gentillesse	ESSAI#18
+U0035	19	19x1		Sel	ESSAI#19
+U0036	19	19x1		Mains	ESSAI#20
+U0037	19	19x1		Couronne	ESSAI#21
+U0038	19	19x1		Gant	ESSAI#22
+U0039	19	19x1		Pinceau	ESSAI#23
+U0040	19	19x1		Plume	ESSAI#24
+U0041	19	19x1		Glotziok, amateur de cafards	ESSAI#25
+U0042	19	19x1		Oumkapok, amateur de boulettes	ESSAI#26
+U0043	19	19x1		L'ignoble Amoniak	ESSAI#27
+U0044	19	19x1		Le Prince Bouffon prisonnier	ESSAI#28
+U0045	19	19x1	Head	Tête	GOB00#0,GOB03#32,GOB20#24
+U0046	19	19x1	GReat wizard, your fellow wizard from middle earth has sent us.	GRAND MAGICIEN, c'est TON COLLègue des terres centrales qui nous envoie!	GOB00#1
+U0047	19	19x1	we must find the son of king angoulafre who was kidnapped by a demon.	nous devons retrouver le fils du roi angoulafre, enlevé par un démon.	GOB00#3
+U0048	19	19x1	Tazaar	Tazaar	GOB00#4,GOB21#0
+U0049	19	19x1	i know about this. It's the ghastly amoniak who is holding the child.	je connais cette affaire. C'est l'ignoble AMONIAK qui détient l'enfant	GOB00#6
+U0050	19	19x1	this demon has ousted our good king and reigns in his place.	ce démon surgi du néant a détrôné notre bon roi et règne à sa place...	GOB00#7
+U0051	19	19x1	Bottle	Bouteille	GOB00#8,GOB01#11,GOB01#17,GOB02#4
+U0052	19	19x1	hey, little gobliins, what d'ya want?	hé bien petits gobliins! que me voulez-vous?	GOB00#9
+U0053	19	19x1	Hey, old walrus, modemus the wizard has sent us to you!	Holà vieux phoque, modemus le magicos nous envoie à toi!	GOB00#10
+U0054	19	19x1	help us find old angoulafre's kid!	aide-nous à retrouver le mouflet du vieil angoulafre!	GOB00#11
+U0055	19	19x1	your advice is most precious, noble wizard! where must we go?	tes conseils nous sont précieux noble magicien! où devons-nous aller?	GOB00#12
+U0056	19	19x1	ok bEARDY, tell us where to go AND think quick!	ok barbu! indique-nous le chemin et active-toi le haricot!	GOB00#13
+U0057	19	19x1	leave the village and go to the castle beware! a giant is blocking the road.	quittez ce village pour le château! gare! un géant affamé barre la sortie!	GOB00#14
+U0058	19	19x1	Water	Eau	GOB00#15,GOB02#10
+U0059	19	19x1	Flowers	Fleurs	GOB00#16,GOB01#15,GOB01#18,GOB02#7
+U0060	19	19x1	Stone	Pierre	GOB00#17,GOB01#8,GOB02#13,GOB03#22
+U0061	19	19x1	Spring key	Clé ronde	GOB00#18,GOB01#7,GOB02#6,GOB03#20
+U0062	19	19x1	Big key	Grosse clé	GOB00#19,GOB01#6,GOB02#5,GOB03#19
+U0063	19	19x1	Sausage	Saucisson	GOB00#20,GOB01#14,GOB02#8,GOB03#17
+U0064	19	19x1	Wine	Vin	GOB00#21,GOB01#9,GOB02#12,GOB03#16
+U0065	19	19x1	Matches	Allumettes	GOB00#23,GOB01#5,GOB02#1,GOB03#15
+U0066	19	19x1	Tail	Queue	GOB00#25
+U0067	19	19x1	Cuckoo-clock	Coucou	GOB00#26
+U0068	19	19x1	Kettle	Théière	GOB00#27
+U0069	19	19x1	Hey, villager, do you know the house of the lord TAZAAR?	Hélà villageois connaissez-vous la maison du sieur TAZAAR?	GOB01#1
+U0070	19	19x1	we'll have to distract the attention of these two poor old toadstools.	il faudrait détourner l'attention de ces deux vieux champignons.	GOB01#3
+U0071	19	19x1	we'll have to make these two old billies laugh a bit!	Il faudrait les faire rire un peu, ces deux pauvres bougres!	GOB01#4
+U0072	19	19x1	Switch	Bouton	GOB01#10,GOB05#7,GOB11#2,GOB15#6
+U0073	19	19x1	Old men	Vieux	GOB01#19
+U0074	19	19x1	Notable	Notable	GOB01#20
+U0075	19	19x1	it's at the end of the village, the house with the fountain...	C'est au bout du village, la maison avec la fontaine...	GOB01#21
+U0076	19	19x1	why are you two noodles looking at me like that?	Ben alors la paire d'andouilles, pourquoi vous faites cette tête-là?	GOB01#22
+U0077	19	19x1	we're starving! only the notable has enough to eat.	nous sommes affamés! Il n'y a guère que le notable qui ait encore à manger...	GOB01#23
+U0078	19	19x1	dear sir, you look powerful, could you please help us in this quest?	cher monsieur vous avez l'air influent nous aiderez-vous dans notre quête?	GOB01#24
+U0079	19	19x1	it's for a survey, can i ask you a few questions?	C'est pour un sondage! Puis-je vous poser quelques questions?	GOB01#25
+U0080	19	19x1	Rung	Echelon	GOB02#3
+U0081	19	19x1	Mechanism	Mécanisme	GOB02#14,GOB02#28
+U0082	19	19x1	Window	Fenêtre	GOB02#15
+U0083	19	19x1	Fountain	Fontaine	GOB02#16
+U0084	19	19x1	can i help you?	vous désirez?	GOB02#17
+U0085	19	19x1	Cellar	Cellier	GOB02#18
+U0086	19	19x1	Toad	Crapaud	GOB02#19
+U0087	19	19x1	noble wizard, please let me speak to you.	noble magicien, permettez-nous de solliciter un entretien...	GOB02#20
+U0088	19	19x1	Door	Porte	GOB02#21,GOB04#2,GOB06#30,GOB08#27
+U0089	19	19x1	Wizard	Magicien	GOB02#22
+U0090	19	19x1	sorry! I've no time!	Désolé! pas le temps...	GOB02#23
+U0091	19	19x1	as a matter of fact, we're salesmen...	Voilà nous vendons des brosses...	GOB02#25
+U0092	19	19x1	such persistence! all right, you can come in.	quel entêtement! Bon vous pouvez entrer!	GOB02#26
+U0093	19	19x1	Chimney	Cheminée	GOB02#27
+U0094	19	19x1	Jet of water	Jet d'eau	GOB02#29
+U0095	19	19x1	please, nice giant, wake up!	S'il-vous-plaît brave géant... réveillez-vous!	GOB03#1
+U0096	19	19x1	c'mon lazyhead, time to get up!	allez c'est l'heure gros fainéant... debout et que ça saute!	GOB03#3
+U0097	19	19x1	hey, dumbo! just leave me alone! i'm trying to forget my hunger and thirst.	dis-donc minus laisse-moi tranquille! j'essaie d'oublier ma faim et ma soif!	GOB03#4
+U0098	19	19x1	let us pass, please!	laissez-nous passer je vous prie!	GOB03#5
+U0099	19	19x1	c'mon, move, you big heap!	allez bouge de là gros tas!	GOB03#6
+U0100	19	19x1	ok midget, but bring me some good booze first!	d'accord petit gnome mais apporte-moi du bon picrate et de quoi manger!	GOB03#7
+U0101	19	19x1	Giant	Géant	GOB03#10
+U0102	19	19x1	Dog	Chien	GOB03#11
+U0103	19	19x1	Chicken	Poule	GOB03#12
+U0104	19	19x1	ok, but bring me some good chow!	d'accord mais apporte-moi maintenant du bon picrate!	GOB03#13
+U0105	19	19x1	ok, but give me something to eat!	d'accord mais donne-moi de quoi manger avant!	GOB03#14
+U0106	19	19x1	Flower	Fleur	GOB03#21,GOB04#25,GOB05#4,GOB06#4
+U0107	19	19x1	PIEDS DE NEZ	PIEDS DE NEZ	GOB03#24
+U0108	19	19x1	Wood pile	Tas de bois	GOB03#25
+U0109	19	19x1	Burrow	Terrier	GOB03#26
+U0110	19	19x1	Den	Tanière	GOB03#27
+U0111	19	19x1	Pot hole	Ornière	GOB03#28
+U0112	19	19x1	Hole	Trou	GOB03#29,GOB06#29,GOB13#33,GOB15#5
+U0113	19	19x1	Egg	Oeuf	GOB03#30
+U0114	19	19x1	Fire	Feu	GOB03#31
+U0115	19	19x1	Vivalzart	Vivalzart	GOB04#3,GOB05#9
+U0116	19	19x1	Hello, there! any luck?	Salut collègue! alors on a réussi?	GOB04#4
+U0117	19	19x1	Branch	Branche	GOB04#5
+U0118	19	19x1	Drumstick	Baguette	GOB04#6,GOB05#15,GOB06#1,GOB07#1
+U0119	19	19x1	Flycatcher	Filet à papillon	GOB04#7,GOB05#16,GOB06#2,GOB07#3
+U0120	19	19x1	Bicycle pump	Pompe à vélo	GOB04#8,GOB05#17,GOB06#3,GOB07#4
+U0121	19	19x1	Mosquito	Moustique	GOB04#9,GOB05#18,GOB06#5,GOB07#5
+U0122	19	19x1	Worm	Ver	GOB04#10,GOB05#19,GOB06#10,GOB07#7
+U0123	19	19x1	a very good day to you, mister tree. can you give us some advice?	bien le bonjour cher arbre, donnez-nous un conseil s'il-vous-plaît!	GOB04#11
+U0124	19	19x1	Note	Note	GOB04#12,GOB05#21,GOB06#7,GOB07#6
+U0125	19	19x1	so, you old faggot, are you putting down roots?	alors vieille branche... on prend racine?	GOB04#13
+U0126	19	19x1	thanks for quenching my thirst! i'll let you climb up my hand...	merci d'avoir étanché ma soif! toi, je te permets de monter sur ma main...	GOB04#14
+U0127	19	19x1	go and see the bird over there! he has two passions: music and mushrooms.	allez voir l'oiseau en face! il a 2 passions: la musique et les champignons	GOB04#15
+U0128	19	19x1	bring him the mushroom that the nymph shows, in exchange for a little treat!	amenez-lui le champignon que l'elfe désignera en échange d'une friandise!	GOB04#16
+U0129	19	19x1	do you live with your parents?	vous habitez chez vos parents?	GOB04#18
+U0130	19	19x1	Do you always go around in your birthday suit?	vous vous promenez toujours toute nue?	GOB04#20
+U0131	19	19x1	Bee	Abeille	GOB04#21
+U0132	19	19x1	Kael	Kael	GOB04#23,GOB18#11
+U0133	19	19x1	Nymph	Nymphe	GOB04#24
+U0134	19	19x1	Clothes peg	Pince	GOB04#27,GOB05#22,GOB06#12,GOB07#9
+U0135	19	19x1	Hourglass	Sablier	GOB04#28,GOB05#23,GOB06#13,GOB07#10
+U0136	19	19x1	Ball	Ballon	GOB04#29,GOB05#24,GOB06#14,GOB07#11
+U0137	19	19x1	Honey	Miel	GOB04#30,GOB05#25,GOB06#15,GOB07#12
+U0138	19	19x1	Mushroom	Champignon	GOB04#31,GOB05#26,GOB06#16,GOB07#13
+U0139	19	19x1	Fish	Pirañha	GOB04#32,GOB08#16
+U0140	19	19x1	Bone	Os	GOB04#33,GOB05#28,GOB06#18,GOB07#15
+U0141	19	19x1	Meat	Viande	GOB04#34,GOB05#29,GOB06#19,GOB07#16
+U0142	19	19x1	we've brought you a mushroom, it's really good to eat!	on t'amène un champignon collègue! Attention c'est du bon!	GOB05#2
+U0143	19	19x1	please accept this small gift! it's really elegant.	veuillez recevoir ce modeste présent! il semble que ce soit un must!	GOB05#3
+U0144	19	19x1	excellent! put it in my musical dream machine and taste!	excellent! mettez-le dans ma machine à faire des rêves en musique et goûtez!	GOB05#5
+U0145	19	19x1	Machine	Machine	GOB05#10,GOB16#20
+U0146	19	19x1	Vulture	Vautour	GOB05#13
+U0147	19	19x1	Elixir of kindness	Elixir de gentillesse	GOB05#14
+U0148	19	19x1	Container	Récipient	GOB05#20
+U0149	19	19x1	Piranha	Pirañha	GOB05#27,GOB06#17,GOB07#14
+U0150	19	19x1	Jar	Bocal	GOB05#30
+U0151	19	19x1	before drinking it, shouldn't i take another look around?	Avant d'avaler ce breuvage ne devrais- pas jeter un dernier coup d'oeil ici?	GOB05#32
+U0152	19	19x1	why not take a souvenir of my visit before drinking this stuff?	Et si j'emportais un souvenir de ma visite avant de gober ce truc-là?	GOB05#33
+U0153	19	19x1	dear artist, could you play us one of your tunes?	cher artiste, voudriez-vous nous jouer un air de votre répertoire?	GOB06#21
+U0154	19	19x1	hey lazybone, how about some music?	dis-donc fainéant, t'as pas envie de nous gratter un p'tit air?	GOB06#22
+U0155	19	19x1	yes, yes! i really feel like playing my guitar...	ben si justement... j'ai la guitare qui me démange!	GOB06#23
+U0156	19	19x1	No problem! I'll play you a piece i composed myself...	pas de problème! voici un morceau de ma composition!	GOB06#24
+U0157	19	19x1	noble musician, could you give us a few variations on a theme?	noble musicien pouvez-vous nous interpréter une variation sur un thème?	GOB06#25
+U0158	19	19x1	hey, could you give us a toot on your flute?	hé l'ami saurais-tu tirer quelques sons de ton beuglant?	GOB06#26
+U0159	19	19x1	Hood	Capuche	GOB06#28
+U0160	19	19x1	Guitarist	Guitariste	GOB06#31
+U0161	19	19x1	Spring	Ressort	GOB06#32
+U0162	19	19x1	Saxophonist	Saxophoniste	GOB06#33
+U0163	19	19x1	Tube	Tuyau	GOB06#34
+U0164	19	19x1	Headlight	Phare	GOB06#35
+U0165	19	19x1	House	Maison	GOB07#8
+U0166	19	19x1	Basket	Panier	GOB07#21
+U0167	19	19x1	hey sporty, lovely weather for a game!	salut ami sportif! beau temps pour une partie n'est-ce-pas?	GOB07#23
+U0168	19	19x1	it belongs to tom, our master clock- maker. give 2 short knocks on his door!	à tom notre maître horloger, frappez donc à sa porte deux coups brefs...	GOB07#24
+U0169	19	19x1	hi, my good mayor, what's to be seen around here?	holà camarade fonctionnaire qu'est-ce qu'il y a à voir dans le coin?	GOB07#25
+U0170	19	19x1	go and see tom, our master clockmaker. he'll help you to pass the time...	allez voir tom notre maître horloger il va vous faire passer le temps...	GOB07#26
+U0171	19	19x1	dear master clockmaker, we'd like to see your talent at work...	cher maître nous aimerions recevoir un témoignage de votre talent...	GOB07#27
+U0172	19	19x1	this is a hold up! gimme the money!!!	c'est un hold-up! la caisse vite!	GOB07#28
+U0173	19	19x1	you are wasting my time, dope. Here there are only hourglasses...	tu perds ton tempsminus, ici il n'y a que des sabliers...	GOB07#29
+U0174	19	19x1	it's for an hourglass? right,so replace the clocks tock-tock with a melody!	c'est pour un sablier? bon remplacez le tic-tac de l'horloge par une mélodie...	GOB07#30
+U0175	19	19x1	NOBLE bUrgomaster, whose is that lovely HOUSE WHICH REFUSES TO OPEN?	noble bourgmestre à qui est cette jolie maison qui reste obstinément close?	GOB07#31
+U0176	19	19x1	what are you waiting for smelly, some medals?	qu'est-ce-que t'attends mou du bulbe, des médailles?	GOB07#32
+U0177	19	19x1	Mayor	Maire	GOB07#33
+U0178	19	19x1	Town hall	Mairie	GOB07#34
+U0179	19	19x1	Tom	Tom	GOB07#36
+U0180	19	19x1	Basketball player	Basketteur	GOB07#37
+U0181	19	19x1	Clockmaker's	Horlogerie	GOB07#38
+U0182	16	8x2	on the way out of the village stood the famous castle they decided to make a tour of it	à la sortie du village se tenait le fameux château ils décidèrent d' en faire le tour.	GOB08#7
+U0183	19	19x1	borrow the carpet and come and see me, i can't hear you from here!	empruntez-donc le tapis pour venir me voir. D'ici je ne vous entends pas!	GOB08#8
+U0184	19	19x1	lucky you've got my friend! a steady job, no worries!	quelle chance vous avez mon ami! un emploi stable et de tout repos...	GOB08#21
+U0185	19	19x1	come up here if you dare - that's what the carpet is for!	toi montes ici un peu si tu l'oses... le tapis est là pour ça!	GOB08#22
+U0186	19	19x1	to reach the castle, throw some of the sand of time into the trenches!	pour accéder à ce château, jetez dans les douves un peu de sable du temps...	GOB08#24
+U0187	19	19x1	if you want to enter the castle, don't go by the door!	si voulez pénétrer dans ce château n'empruntez surtout pas la porte!	GOB08#25
+U0188	19	19x1	Tower	Tour	GOB08#26
+U0189	19	19x1	Soka	Soka	GOB08#28
+U0190	19	19x1	Carpet	Tapis	GOB08#29
+U0191	19	19x1	Opening	Ouverture	GOB08#30
+U0192	19	19x1	Bomb	Bombe	GOB08#31
+U0193	19	19x1	Trench	Tranchée	GOB08#32
+U0194	19	19x1	Guard	Gardien	GOB08#33
+U0195	19	19x1	Bellows	Soufflet	GOB09#2
+U0196	19	19x1	greetings, blacksmith, we didn't find everything, but it's on it's way...	Salut l'artisan, on n'a pas tout trouvé mais ça vient...	GOB09#3
+U0197	19	19x1	Patience, good blacksmith, we'll look for what you asked...	Patience ami forgeron, nous cherchons ce que tu nous a demandé...	GOB09#5
+U0198	19	19x1	brother dwarf, here we are! we have the two elements!	Frère nain, voilà! nous avons les deux éléments!	GOB09#6
+U0199	19	19x1	that's it! we've got work for you, artist!	Ca y est ! on a du boulot pour toi l'artiste!	GOB09#8
+U0200	19	19x1	i can't make the key if you don't give me it's imprint!	je ne peux pas forger la clé si vous ne me donnez pas son empreinte!	GOB09#9
+U0201	19	19x1	this junk is useless if you don't have the key's imprint!	Cette ferraille est inutile si vous n'avez pas d'empreinte de la clé...	GOB09#10
+U0202	19	19x1	is there something still missing?	Manque-t'il encore quelque chose?	GOB09#11
+U0203	19	19x1	yes! you have to stoke up the fire with the bellows.	Oui! Il faut réveiller la braise à l'aide du soufflet...	GOB09#12
+U0204	19	19x1	what are you waiting for? start working, lazybones!	Bon qu'est-ce que t'attends? Allez! AU travail!	GOB09#13
+U0205	19	19x1	go and work the bellows instead of annoying me!	Va plutôt activer le soufflet, au lieu de m'ennuyer!	GOB09#14
+U0206	19	19x1	could you let us pass please?	Pouvez-vous nous céder le passage s'il-vous-plaît?	GOB09#15
+U0207	19	19x1	that looks good! could you give me a piece?	Ça a l'air bon ce truc-là! Tu pourrais m'en filer un bout?	GOB09#16
+U0208	19	19x1	Lance	Lance	GOB09#17
+U0209	19	19x1	Blacksmith	Forgeron	GOB09#18
+U0210	19	19x1	Oto	Oto	GOB09#19
+U0211	19	19x1	Anvil	Enclume	GOB09#20,GOB10#16,GOB11#21
+U0212	19	19x1	Focus	Focus	GOB09#21
+U0213	19	19x1	Stool	Tabouret	GOB09#22,GOB10#8,GOB11#19,GOB12#8
+U0214	19	19x1	Mayonnaise	Mayonnaise	GOB09#24,GOB10#14,GOB11#17
+U0215	36	9x4	PSS,i'M WITH YOU! TO GET TO THE DEMON'S tHrone you need the key of the chest with the carved fish. bring me its imprint and a piece of metal, and i'll forge you a key.	psst,je suis avec vous! pour accéder au trône du démon, il faut la clé de l'armoire aux pois- sons. Apportez-moi son empreinte et un bout de ferraille, je vous la forgerai!	GOB09#25,GOB10#15
+U0216	19	19x1	Chewing-gum	Chewing-gum	GOB09#26,GOB10#10,GOB11#12
+U0217	19	19x1	Imprint	Empreinte	GOB09#27,GOB10#18,GOB11#13,GOB17#16
+U0218	19	19x1	False teeth	Dentier	GOB09#28,GOB10#12,GOB11#14
+U0219	19	19x1	Sword	Epée	GOB09#29,GOB10#13,GOB11#15,GOB12#0
+U0220	19	19x1	Diving suit	Scaphandre	GOB09#30,GOB10#19,GOB11#18
+U0221	19	19x1	Kindelixir	Elixir de gentillesse	GOB09#31,GOB10#20,GOB11#20,GOB12#1
+U0222	19	19x1	Key	Clé	GOB09#32,GOB10#21,GOB11#22,GOB18#24
+U0223	19	19x1	ow!	Aïe!	GOB10#2
+U0224	19	19x1	Rustik	Rustik	GOB10#3
+U0225	19	19x1	Gromelon	Gromelon	GOB10#5
+U0226	19	19x1	Stalopicus	Stalopicus	GOB10#6
+U0227	19	19x1	Amidal	Amidal	GOB10#11
+U0228	19	19x1	Cupboard	Armoire	GOB10#17
+U0229	19	19x1	Skull	Crâne	GOB10#22,GOB12#16
+U0230	19	19x1	Schwarzy	Schwarzy	GOB11#3
+U0231	19	19x1	Hatchet	Hache	GOB11#4
+U0232	19	19x1	Hoist	Palan	GOB11#5
+U0233	19	19x1	Cover	Couvercle	GOB11#6,GOB14#9,GOB19#18
+U0234	19	19x1	Block	Billot	GOB11#7
+U0235	19	19x1	Tunnel	Souterrain	GOB11#9
+U0236	19	19x1	Well	Puits	GOB11#23
+U0237	19	19x1	so you're the big hellhound around herE	Est-ce vous le cerbère de ces lieux?	GOB11#24
+U0238	19	19x1	where's the way out, bone heap?	C'est par où la sortie, tas d'os?	GOB11#25
+U0239	19	19x1	Hey, maggot, bow down before your god!	Hé cloporte, prosterne-toi devant ton dieu!	GOB11#26
+U0240	19	19x1	Lie down, you fake ninja turtle!	ALLEZ va coucher ersatz de Tortue NINJA!	GOB11#27
+U0241	19	19x1	you still hanging around? i've got my eye on you!	ALORS on trouve toujours le moyen de glander? Je t'ai à l'oeil moi!	GOB11#28
+U0242	19	19x1	too risky! we'll have to scare him more...	C'est trop risqué! il faudrait l'effrayer davantage.	GOB11#29
+U0243	19	19x1	this guy is too vigilant. we'll occupy him elsewhere...	Ce gugusse est encore trop vigilant! il faudrait l'occuper ailleurs...	GOB11#30
+U0244	19	19x1	Glove	Gant	GOB12#2,GOB13#17,GOB15#22,GOB16#12
+U0245	19	19x1	Pearl	Perle	GOB12#3,GOB13#20
+U0246	19	19x1	Starfish	Etoile	GOB12#4,GOB13#22
+U0247	19	19x1	Parchment	Parchemin	GOB12#5,GOB13#23
+U0248	19	19x1	Chest	Coffre	GOB12#6
+U0249	22	11x2	THe two adventurers descended into the murky depths of a strange under-water world...	les deux aventuriers descendirent dans les profondeurs insondables d'un monde sous-marin étrange et inconnu...	GOB12#7
+U0250	19	19x1	Lantern	Fanal	GOB12#9
+U0251	19	19x1	Fish lamp	Poisson-lampe	GOB12#10,GOB13#8
+U0252	19	19x1	Moray eel	Murène	GOB12#11
+U0253	19	19x1	Rudder	Gouvernail	GOB12#12
+U0254	19	19x1	Statue	Statue	GOB12#13,GOB16#8,GOB17#6
+U0255	19	19x1	???	???	GOB12#14
+U0256	19	19x1	Diamond	Diamant	GOB12#17,GOB13#21
+U0257	19	19x1	ANYTHING PRECIOUS HEre?	y-a-t'il quelque chose de précieux ici?	GOB12#19
+U0258	19	19x1	no! but there must be pearls and diamonds if you really look hard...	non! mais des perles et des diamants à profusion si on cherche bien...	GOB12#20
+U0259	19	19x1	any chance of a treasure around here?	Il n'y aurait pas un trésor à glaner dans le coin?	GOB12#21
+U0260	19	19x1	it's not an impossibility, but to open them 'need to have real sailor-muscle!	pas impossible petit, mais il faut pour les ouvrir des muscles bien marins!	GOB12#22
+U0261	19	19x1	"SOS...help me! mayday! help me!" SIGNed: PRINCE BUFFoON	" SOS - SAUvez-moi _ HELP - à l'aide " SIGNé: le PRINCE BOUFFON	GOB12#26
+U0262	19	19x1	no, i think i've left something really useful...	non... il me semble que j'ai oublié quelque objet fort utile...	GOB13#0
+U0263	19	19x1	hey, i think we left something important behind!	hé je crois qu'on a laissé derrière nous un truc important!	GOB13#1
+U0264	19	19x1	"SOS - help me! mayday! help me!" SIGNed: PRINCE BUFFoON	" SOS - SAUvez-moi _ HELP - à l'aide " SIGNé: le PRINCE BOUFFON	GOB13#2
+U0265	19	19x1	Shell	Coquillage	GOB13#3
+U0266	19	19x1	Seahorse	Hippocampe	GOB13#4
+U0267	19	19x1	Cavity	Cavité	GOB13#6
+U0268	19	19x1	Mermaid	Sirène	GOB13#7
+U0269	19	19x1	Octopus	Pieuvre	GOB13#10
+U0270	19	19x1	Blob	Blob	GOB13#11
+U0271	19	19x1	help us to get out of here, princess of the deep!	Aidez-nous à sortir de là, princesse des profondeurs!	GOB13#12
+U0272	19	19x1	i'd like to, but i can't see anything since amoniak robbed me of my eyesight	Je voudrais bien mais je n'y vois rien depuis qu'amoniak m'a ôté mes 2 yeux!	GOB13#14
+U0273	19	19x1	alright baby, wanna little kiss? you know the short cut!	ALorS poupée, on se fait la bise? Tu connais bien un raccourci!	GOB13#16
+U0274	19	19x1	yes, but i can't show you, because i've been robbed of my eyesight	oui! mais je ne puis vous l'indiquer Puisque l'on m'a volé mes deux yeux!	GOB13#19
+U0275	19	19x1	are you happy now?	ALORS VOUS êtes contente?	GOB13#24
+U0276	19	19x1	Oh yes, many thanks! but i can only open a part of the issue...	Oh OUI, grand merci! je peux vous ouvrir la moitié de la sortie!	GOB13#25
+U0277	19	19x1	that was worth it, ducky, now you can see my handsome body!	ça valait le coup, BABY, de pouvoir contempler mon corps d'athlète!	GOB13#26
+U0278	19	19x1	with all due respect, you're really not my type!	sauf la reconnaissance que je vous dois vous n'êtes vraiment pas mon genre!	GOB13#28
+U0279	19	19x1	please, ma'am, show us the way to the throne room!	S'il-vous-PLaît madame, indiquez-nous le chemin vers la salle du trône!	GOB13#29
+U0280	19	19x1	and who says you're going there for the right reason?	Et qui me dit que vous voulez vous y rendre pour des motifs louables?	GOB13#30
+U0281	19	19x1	Oh, i'm fed up going round in circles! show us the way out, centipede!	Bon j'en ai marre de tourner en rond! indique-nous la sortie mille-pattes!	GOB13#31
+U0282	19	19x1	why should i help you, cheeky fellow? there's something fishy about you...	et pourquoi je t'aiderais insolent, avec tes manières plutôt louches...	GOB13#32
+U0283	19	19x1	ah, now i understand! you want to free this poor child. excuse my suspicion...	Ah je comprends... Vous allez délivrer ce pauvre enfant... Excusez ma méfiance	GOB13#34
+U0284	19	19x1	Rope	Corde	GOB14#2
+U0285	19	19x1	Cook	Cuisinier	GOB14#3
+U0286	19	19x1	Swordfish	Espadon	GOB14#5
+U0287	19	19x1	Chain	Chaîne	GOB14#6
+U0288	19	19x1	Colibrius	Colibrius	GOB14#8
+U0289	19	19x1	Fellow	Bonhomme	GOB14#10
+U0290	19	19x1	Meat ball	Boulette	GOB14#11
+U0291	19	19x1	Case	Caisse	GOB14#12
+U0292	19	19x1	My poor friend, they want to cook you! we'll get you out of there...	Mon pauvre ami, il veulent vous faire cuire? Nous allons vous tirer de là!	GOB14#13
+U0293	19	19x1	Thumb tacks	Punaises	GOB14#14
+U0294	19	19x1	Broom	Balai	GOB14#15,GOB15#15,GOB16#36
+U0295	19	19x1	File	Lime	GOB14#16,GOB15#17,GOB16#37,GOB18#26
+U0296	19	19x1	Salt	Sel	GOB14#17,GOB15#19,GOB16#38
+U0297	19	19x1	Pots	Bols	GOB14#18
+U0298	19	19x1	not at all, my fine man, i'm just taking my bath.	Mais pas du tout mon brave, je prends mon bain c'est tout!	GOB14#19
+U0299	19	19x1	HMMM! you look really delicious. you'll make a lovely roast!	HMMM! Vous avez l'air succulent! Pour sûr, vous ferez un bon rôti!	GOB14#20
+U0300	19	19x1	get lost, pinhead! you're in my light, can't you see i'm taking a dip?	DégAge minus! tu me fais de l'ombre! tu ne vois pas que je fais trempette!	GOB14#21
+U0301	19	19x1	ah! bath salts! you're o.K. you know! the file in that pot, 'tisyours...	ah! des sels de bain! t'es pas si bête! la lime dans ce bol là... c'est cadeau!	GOB14#22
+U0302	19	19x1	what are you doing in there?	Qu'est-ce que vous faites là-dedans?	GOB14#23
+U0303	19	19x1	free me! free me! My love is waiting for me outside!	délivrez-moi! délivrez-moi! mon amour m'attend au dehors!	GOB14#24
+U0304	19	19x1	they want to eat you too?	toi aussi on veut te manger?	GOB14#25
+U0305	19	19x1	no, they put me in the cage to sing my unhappiness...	non, on m'enferme ici pour que je chante ma tristesse...	GOB14#26
+U0306	19	19x1	Meat balls	Boulettes	GOB14#28
+U0307	12	6x2	Sucked up into a tube, they come to the surface	aspirés dans un tuyau,ils remontèrent àla surface!	GOB14#29
+U0308	19	19x1	much too spicy!inedible! wretch! these meat balls are much too spicy!	immangeable! infâme! ces boulettes sont trop épicées!	GOB14#32
+U0309	19	19x1	NO, it will spill, and he will throw it away!	NON ça va dégouliner et il va la balancer...	GOB14#33
+U0310	19	19x1	NO, I respect the art of cooking far too much...	NON, je suis trop respectueux du travail culinaire...	GOB14#34
+U0311	19	19x1	Tongue	Langue	GOB15#2
+U0312	19	19x1	Ear	Oreille	GOB15#3
+U0313	19	19x1	Cornice	Corniche	GOB15#9
+U0314	19	19x1	Buffoon	Bouffon	GOB15#10,GOB16#31,GOB17#0,GOB18#1
+U0315	19	19x1	Pepper	Poivre	GOB15#11,GOB16#34
+U0316	19	19x1	Cockroach	Cafard	GOB15#12,GOB16#33,GOB17#2,GOB18#3
+U0317	19	19x1	Thumb tack	Punaises	GOB15#14,GOB16#35
+U0318	19	19x1	Kindelexir	Elixir de gentillesse	GOB15#18
+U0319	19	19x1	Hands	Mains	GOB15#20
+U0320	19	19x1	Crown	Couronne	GOB15#21,GOB16#39
+U0321	19	19x1	Brush	Pinceau	GOB15#23,GOB16#40
+U0322	19	19x1	Feather	Plume	GOB15#24,GOB16#25
+U0323	19	19x1	Glotziok, lover of cockroaches	Glotziok, amateur de cafards	GOB15#25
+U0324	19	19x1	Oumkapok, lover of meatballs	Oumkapok, amateur de boulettes	GOB15#26
+U0325	19	19x1	The ignoble Amoniak	L'ignoble Amoniak	GOB15#27
+U0326	19	19x1	Prince Buffoon a prisonner	Le Prince Bouffon prisonnier	GOB15#28
+U0327	19	19x1	Be greeted, noble scholar! Tell me, how does this machine work?	BONJOUR noble savant! quelle est la fonction de cet engin?	GOB16#0
+U0328	19	19x1	it's a shrinking machine which the terrible demon forced me to make.	c'est une machine à réduire que le terrible démon m'a forcé à construire!	GOB16#2
+U0329	19	19x1	hey, einstein, could you give me something to trap the demon?	dis-donc einstein, tu ne connaîtrais pas un truc pour piéger le démon?	GOB16#3
+U0330	19	19x1	of course there's a way! get him to drink theelixir of kindness!	bien sûr il y a un moyen! Lui faire absorber de l'élixir de gentillesse!	GOB16#4
+U0331	19	19x1	you must love your new king, you've painted him with such enthusiasm...	vous l'aimez tant votre nouveau roi, que vous le peigniez avec cette ardeur!	GOB16#5
+U0332	19	19x1	oh yes, i do love him. He has made me his official foodtaster!	ben oui je l'aime! il a fait de moi son préparateur officiel de repas royaux!	GOB16#6
+U0333	19	19x1	it's a fine picture, but why is that ladybird there?	l'est réussi ton portrait l'artiste! pourquoi y-a-t'il une coccinelle là?	GOB16#9
+U0334	19	19x1	the new king only eats that. i slide them in under the steps.	le nouveau roi ne mange que ça! je les glisse par le trou en bas des marches!	GOB16#11
+U0335	19	19x1	if you will allow me, sir, you don't look too comfortable there...	si je peux me permettre monsieur... vous aVez l'air en triste posture!	GOB16#13
+U0336	19	19x1	I'm the true king of this place! only my crown can give me back my right size	je suis le vrai roi de ces lieux! seule ma couronne peut me rendre ma taille...	GOB16#14
+U0337	19	19x1	hey-eh, little guy, what are you doing up there?	ben alors mon p'tit bonhomme qu'est-ce-que tu fais perché là-haut?	GOB16#15
+U0338	19	19x1	know, varlet, that i'm a great king. it is the demon who's keeping me locked up	sache manant que je suis un grand roi! c'est le démon qui me tient enfermé ici	GOB16#16
+U0339	19	19x1	unhook me so i can teach that demon a lesson ...	décrochez-moi que je puisse corriger cedémon comme il le mérite...	GOB16#18
+U0340	19	19x1	long live the king! i'll go and find someone to help me release him!	VIVE le roi! je vais de ce pas quérir quelque ami pour tenter de le détacher!	GOB16#19
+U0341	19	19x1	Scientist	Savant	GOB16#21
+U0342	19	19x1	Armour	Armure	GOB16#26
+U0343	19	19x1	Helmet	Heaume	GOB16#27
+U0344	19	19x1	Painter	Peintre	GOB16#29
+U0345	19	19x1	Can	Pot	GOB16#30
+U0346	19	19x1	Bookmark	Marque-page	GOB17#3,GOB17#15,GOB18#9,GOB19#7
+U0347	19	19x1	Seal	Sceau	GOB17#4
+U0348	19	19x1	Ray	Rayon	GOB17#5
+U0349	19	19x1	Wax	Cire	GOB17#7,GOB18#4,GOB19#3,GOB20#6
+U0350	19	19x1	Candle	Bougie	GOB17#8
+U0351	19	19x1	Keyhole	Serrure	GOB17#9
+U0352	19	19x1	Seed	Graine	GOB17#10,GOB18#5,GOB19#4,GOB20#7
+U0353	19	19x1	Glass splinter	Eclat de verre	GOB17#11,GOB18#6,GOB19#5,GOB20#8
+U0354	19	19x1	Eye	Oeil	GOB17#12
+U0355	19	19x1	Match	Allumette	GOB17#13,GOB18#8,GOB19#6,GOB20#9
+U0356	19	19x1	Plant	Plante	GOB17#14
+U0357	19	19x1	Handle	Manche	GOB17#18,GOB22#11
+U0358	19	19x1	Point	Pointe	GOB17#22
+U0359	19	19x1	what do you want me to do with a page-marker?	que voulez-vous que je fasse d'un marque-page!	GOB17#23
+U0360	19	19x1	it's a bucket... so what?	c'est un sceau... et alors?	GOB17#24
+U0361	19	19x1	it's a nice candle but it's got no wicK...	c'est une belle bougie... mais elle n'a pas de mèche...	GOB17#25
+U0362	19	19x1	Strange, an eye in a skull!	bizarre un oeil dans un crâne!	GOB17#26
+U0363	19	19x1	Hello, friend cockroach! not easy getting around here!	bonjour ami cafard! pas commode de se déplacer ici!	GOB17#27
+U0364	19	19x1	what is this? i'd like to use as a tooth-pick!	qu'est-ce que c'est ça? m'en servirait bien comme cure-dent!	GOB17#28
+U0365	19	19x1	It smells like honey. can you eatit?	ça sent le miel. c'est bon à manger ça?	GOB17#29
+U0366	19	19x1	A candle? is that all?	une bougie! pas de quoi en faire un plat!	GOB17#30
+U0367	19	19x1	Despite his advanced age, he still has a sparkle in his eye!	malgré son âge avancé, il aencore le regard vif Lui!	GOB17#31
+U0368	19	19x1	it's the first time i've seen a cockroach wearing trainers & raybans!	c'est bien la première fois que je vois un cafard en ray-ban et en baskets!	GOB17#32
+U0369	19	19x1	Don't talk about that! but you can use the magic card for that!	m'en parlez pas! mais vous, vous pouvez utiliser la carte magique pour ça!	GOB17#33
+U0370	19	19x1	it's hard, we get eaten all the time here. have you seen my brother?	dur! on nous bouffe constamment ici! Au fait vous n'avez pas vu mon frère?	GOB17#34
+U0371	19	19x1	Village	Village	GOB17#35
+U0372	19	19x1	Apples	Pommes	GOB18#12
+U0373	19	19x1	Bean	Haricot	GOB18#13,GOB19#9,GOB20#12,GOB21#20
+U0374	19	19x1	Catapult	Catapulte	GOB18#15
+U0375	19	19x1	Cap	Bonnet	GOB18#21,GOB19#15,GOB20#17,GOB21#24
+U0376	19	19x1	Mole	Taupe	GOB18#22
+U0377	19	19x1	Apple	Pomme	GOB18#23,GOB19#16,GOB20#18,GOB21#25
+U0378	19	19x1	Bowl	Boule	GOB18#25,GOB19#0,GOB20#0,GOB21#27
+U0379	14	7x2	fingus & winkle climbed down this providen- tial giant beanstalk	fingus & winkle descendirent le long de ce haricot géant providentiel!	GOB18#27
+U0380	19	19x1	hey, hello again mister tree! didn't expect to see you again so soon!	tiens rebonjour monsieur l'arbre! je ne pensais pas vous revoir de si tôt!	GOB18#28
+U0381	19	19x1	Little prince, please! you're keeping us. come on!	petit prince, de grâce! vous nous retardez... allez venez!	GOB18#29
+U0382	19	19x1	good morning ma'am, is it fine down there?	bonjour madame, il fait beau là-dessous?	GOB18#30
+U0383	19	19x1	you're not thirsty this time?	vous n'avez pas soif cette fois?	GOB18#31
+U0384	19	19x1	c'mon, get down, we've other things to do!	allez descend morveux! on n'a pas que ça à faire!	GOB18#32
+U0385	19	19x1	i say, housewife, have you got a basket?	dites-voir la ménagère, vous n'auriez pas un panier?	GOB18#33
+U0386	19	19x1	so you're back in the village! go through this door, it leads to tazaar.	hé bien vous voici revenus au village! Passez cette porte, elle mène à tazaar!	GOB18#34
+U0387	19	19x1	no! but you've my permission to take an apple.	non! mais je vous autorise à prendre une pomme si vous voulez!	GOB18#35
+U0388	19	19x1	no! i'm hungry, i'm starving!	non! j'ai faim! j'ai faim!	GOB18#36
+U0389	19	19x1	no hope of that, you monster! i don't want to go with you!	pas question espèce de monstre! je ne veux pas venir avec toi!	GOB18#37
+U0390	19	19x1	no... rather chilly!	non... plutôt frisquet!	GOB18#38
+U0391	19	19x1	damn cheek! if i had one i'd really give it to you.	espèce d'insolent! si j'en avais un je te le flanquerais là où tu penses!	GOB18#39
+U0392	19	19x1	Feeler	Antenne	GOB19#19
+U0393	19	19x1	Bubble	Bulle	GOB19#20
+U0394	19	19x1	Safety pin	Epingle	GOB19#21,GOB20#1
+U0395	19	19x1	Skittles	Quilles	GOB19#22
+U0396	19	19x1	Flag	Dalle	GOB19#23,GOB20#28
+U0397	19	19x1	Star	Etoile	GOB19#24,GOB20#27
+U0398	19	19x1	Rock	Rocher	GOB20#20,GOB22#7
+U0399	19	19x1	Birds	Oiseaux	GOB20#21
+U0400	19	19x1	Lion	Lion	GOB20#22
+U0401	19	19x1	Cage	Cage	GOB20#23
+U0402	19	19x1	Why have you taken our buffoon? he's a prince...	pourquoi nous avez-vous enlevé notre bouffon? il s'agit d'un prince...	GOB20#25
+U0403	19	19x1	Sorry, but you must help us reCover our freedom!	pardonnez-nous... mais il faut nous aider à recouvrer laliberté!	GOB20#26
+U0404	19	19x1	!!!	!!!	GOB20#29,GOB22#21
+U0405	19	19x1	!!	!!	GOB20#30
+U0406	19	19x1	!	!	GOB20#31
+U0407	19	19x1	Skeleton	Squelette	GOB21#1
+U0408	19	19x1	Toothpick	Cure-dent	GOB21#2
+U0409	19	19x1	Portrait	Portrait	GOB21#3
+U0410	19	19x1	Armchair	Fauteuil	GOB21#4
+U0411	19	19x1	Pipe	Pipe	GOB21#5
+U0412	19	19x1	Blackboard	Tableau noir	GOB21#6
+U0413	19	19x1	Pool	Flaque	GOB21#7
+U0414	19	19x1	Sponge	Eponge	GOB21#8,GOB22#12
+U0415	19	19x1	Pencil	Crayon	GOB21#9
+U0416	19	19x1	Smoke	Fumée	GOB21#11
+U0417	19	19x1	Possessed buffoon	Bouffon possédé	GOB21#12
+U0418	40	10x4	THis child is possessed! i'll take him to my laboratory. We must make him drink the water of my fountain. get some and come right back!	cet enfant est possédé! je l'emmène dans mon laboratoire. il faut lui faire boire de l'eau de ma fontaine. prenez-en et rejoignez-moi!	GOB21#29
+U0419	24	12x2	THE GObliins were returning triumphantly to the villalge when they saw that the buffoon looked strange...	les gobliins rentrèrent triomphalement au village lorsqu'ils s'aperçurent que le bouffon avait pris un air étrange...	GOB21#30
+U0420	19	19x1	can you help us, noble magician, to make the prince drink?	noble magicien pouvez-vous nous aider à faire boire le prince?	GOB21#31
+U0421	19	19x1	hey wizard, give us a hand, it's not easy!	hé le magicos aide-nous un peu! si tu crois que c'est facile...	GOB21#32
+U0422	19	19x1	excuse me, friend, the demon knocked me out. i have to recover.	excusez-moi ami, le démon m'a assommé. il faut que je récupère...	GOB21#33
+U0423	19	19x1	i've got here some magic water, if you heat it, it'll open every door.	j'ai quelque part ici une mixture qui ,chauffée ,ouvre toutes les portes!	GOB21#34
+U0424	19	19x1	ah no, it's the wrong time. i'm exhausted, buzz off!	ah non! c'est pas le moment... je suis épuisé. allez! Du vent!	GOB21#35
+U0425	19	19x1	Now, noble magician, what can we do?	et maintenant noble magicien que pouvons-nous faire?	GOB21#36
+U0426	19	19x1	so now the kid's disappeared without a trace!	bon maintenant il a disparu le mouflet et sans laisser d'adresse!	GOB21#37
+U0427	19	19x1	you'll just have to follow him superman! he's now in deathland.	tu n'as plus qu'à le suivre superman! il est maintenant au pays des morts!	GOB21#38
+U0428	19	19x1	hold it, demon! give us back the prince!	halte-là démon! rends-nous le prince!	GOB22#0
+U0429	19	19x1	never! it's your fault I'm here in the kingdom of death!	jamais! par votre faute je me retrouve ici enfermé au royaume des morts!	GOB22#1
+U0430	19	19x1	hey, ugly, it's less friendly here than up in the castle, no?	hé l'affreux, c'est moins accueillant ici que là-bas au château hein?	GOB22#2
+U0431	19	19x1	you just wait until i catch you, little creep!	attends un peu que je t'attrape avorton, et je te tordrai le cou!	GOB22#3
+U0432	19	19x1	Amoniak	Amoniak	GOB22#4
+U0433	19	19x1	Teeth	Dents	GOB22#5
+U0434	19	19x1	Mouse	Souris	GOB22#6
+U0435	19	19x1	Mud	Boue	GOB22#8
+U0436	19	19x1	Crocodile	Crocodile	GOB22#9
+U0437	19	19x1	see you! we've rescued the prince. Bye! we must rush!	à la bonne heure! nous avons repris le prince! adieu! je ne vous salue pas!	GOB22#10
+U0438	19	19x1	you think you can escape from here, not a chance. That's my final revenge!	crois-tu pouvoir sortir d'ici? nenni! c'est là ma vengeance ultime!	GOB22#13
+U0439	19	19x1	it wasn't really a pleasure, carnival! so bye-bye!	pas enchanté de t'avoir connu carnaval! maintenant on s'en va! ciao!	GOB22#14
+U0440	19	19x1	oh? so you're off? not a chance! you're stuck here forever like me!	ah oui? tu pars vermine? illusion! comme moi tu es bloqué ici à jamais!	GOB22#15
+U0441	19	19x1	Prince Buffoon	Prince Bouffon	GOB22#16
+U0442	20	5x4		introbb	INTRO0#14,USA0#14
+U0443	153	17x9	the giant, forbidden to enter the village by tazaar the wizard due to his drunken behaviour, stops anybody from leaving. to approach him, the dog must be knocked out with the help of the sausage slipped across a hole in the road. only the smell of a hot meal can put the giant in good form. after that, fingus and winkle can give him a meal.	le géant, interdit de village par tazaar le magicien, suite à ses excès de beuverie, empêche quiconque de sortir. pour l'approcher il faut momentanément assommer le chien à l'aide du saucisson glissé à travers une ornière de la route. seule une odeur de repas chaud pourra le mettre en de bonnes dispositions. après quoi fingus et winkle pourront lui donner à boire et à manger.	JOKER#0
+U0444	153	17x9	modemus materializes fingus and winkle in the village next to the castle taken over by amoniak. the villagers look unhappy. only the notable has a delicious sausage which he guards ferociously from the others. the two gobliins must get it. to do so, they have to put the notable to sleep with a flower that they will have carefully grown.	modemus matérialise fingus et winkle dans le village jouxtant le château investi par amoniak. les villageois y font triste mine. Seul le notable détient un succulent saucisson qu'il protège férocement de la convoitise d'autrui. les deux gobliins doivent se l'approprier. pour ce faire, il faut endormir le notable grâce à une fleur qu'ils auront eu soin de faire pousser.	JOKER#1,JOKERANG#1
+U0445	153	17x9	near the doomed castle everything has gone crazy. when you go into the house it's difficult to know where you'll come out. to open the door of tom, the master clockmaker, you need the help of the mayor, once you get his attention. But tom won't give the gobliins an example of his skill until they replace the awful tick-tock of his clock with a short melody composed by talented musicians.	aux abords du château maudit, tout s'est détraqué. quand on entre par une des portes de l'arbre aux horloges, il est difficile de prévoir par où l'on va ressortir... pour se faire ouvrir la porte de tom, le maître-horloger, il faut attirer l'attention du maire avec un ballon. mais tom ne remettra aux gobliins un exemplaire de son savoir-faire que s'ils remplacent le tic-tac de l'horloge par une mélodie de quelques notes, composée par des musiciens talentueux.	JOKER#2,JOKERANG#2
+U0446	153	17x9	kael advises the gobliins to give the nymph a tasty treat so she will indicate the right mushroom to show to vivalzart, (the music-loving and insomniac heron), so he will open his door. only honey, got by slipping a flower to the bee, will be an acceptable present for interrupting her siesta.	kael conseille aux gobliins de donner une friandise à la nymphe pour qu'elle indique le bon champignon à montrer à vivalzart, (le héron mélomane et insomniaque) pour qu'il ouvre sa porte. seul du miel, obtenu en glissant une fleur dans le refuge de l'abeille, sera un présent suffisant pour se faire pardonner de la déranger dans sa sieste.	JOKER#3
+U0447	153	17x9	carrying the contents of the guards' chest, whose key is to be forged from scrap using the imprint, the gobliins must lift up the well cover by attaching schwarzy to the hoist. they can do this only by distracting him. while fingus makes the monster's jaws move, winkle talks through his mouth. then schwarzy must be frightened enough to lose balance.	munis du contenu de l'armoire des gardes, dont la clé aura été forgée dans de la ferraille grâce à son empreinte, les gobliins doivent soulever le couvercle du puits en accrochant schwarzy au palan. ils n'y parviendront qu'en détournant son attention: tandis que fingus actionne la mâchoire du monstre, WINKLE parle par sa bouche. il faudra ensuite effrayer schwarzy pour lui faire perdre l'équilibre...	JOKER#4
+U0448	153	17x9	to neutralise oumkapok, one of the meatballs made by the cook must be sprinkled with the elixir of kindness. so, the gobliins must arouse oumkapok's anger (he does not like meatballs to be too spicy) and take advantage of the moment when he attacks the cook, by slipping a thumb tack on the case. to get to the thumb tacks, the chain of colibrius must be sawn through, - he's the guy in the cooking-pot who supplies the tool.	pour neutraliser oumkapok, il faut arroser une des boulettes, que lui confectionne le cuisinier, avec l'élixir de gentillesse. pour ce faire, les gobliins doivent déclencher la colère d'oumkapok qui n'aime décidément pas les boulettes trop épicées, et profiter du moment où il empoigne le cuisinier pour glisser une punaise sur la caisse. pour accéder aux punaises il faut scier la chaîne de colibrius. c'est le bonhomme de la marmite qui fournit l'outil.	JOKER#5,JOKERANG#6
+U0449	153	17x9	the tool in the chest is accessible only through the combined action of the gobliins. winkle opens it with the help of a big starfish, while fingus takes the contents from the top deck. he gets there thanks to the shellfish that wants the fish, which in turn is disturbed by a rudder movement and scared by a moray eel.	L'outil contenu dans le coffre n'est accessible que par l'action combinée des deux gobliins. winkle l'ouvre avec l'aide d'une puissante étoile de mer tandis que fingus en prélèvele contenu depuis le pont avant. il y accède grâce au coquillage qui convoite le poisson, lui-même dérangé par le mouvement du gouvernail et effrayé par une murène.	JOKER#6
+U0450	153	17x9	amoniak and his two henchmen must be neutralized by making them eat the elixir of kindness with their favourite food. to capture the cockroaches, which can do all kinds of weird things, it's better to put on a glove. amoniak only likes ladybirds, but a well disguised cockroach may do the trick.	Il s'agit de neutraliser amoniak et ses deux acolytes en leur faisant absorber de l'élixir de gentillesse par l'intermédiaire de leur plat favori. pour capturer les cafards, qu'on peut faire sortir de l'oeil en tirant sur la langue tandis qu'on passe par les oreilles, il vaut mieux enfiler un gant. amoniak lui, n'aime que les coccinelles, mais un cafard habilement grimé peut donner le change...	JOKER#7,JOKERANG#8
+U0451	153	17x9	Prince buffoon, having absorbed a magic mushroom, draws the gobliins into his playful dream. to get him out of the bubble in which the gobliins have imprisoned him, they must find a safety pin, using a cover as a catapult, after standing on it with a bowling ball.	le Prince bouffon ayant absorbé un champignon soporifique entraine les gobliins dans son rêve ludique. Pour le dégager de la bulle dans laquelle les gobliins auront pris soin de l'emprisonner, ils devront se procurer une épingle en jouant de l'effet de catapulte d'un couvercle, après s'être positionné dessus avec une boule de bowling.	JOKER#8
+U0452	153	17x9	to reach the kingdom of death, you must find in tazaar's place the mixture which, at the right temperature, will open all the doors. to do this, the gobliins must annoy the magician a bit, in order to recover some objects, including one to release the skeleton.	Pour accéder au royaume des morts il faut trouver chez tazaar la mixture qui, à la bonne température, ouvre toutes les portes. pour cela les gobliins devront énerver quelque peu le magicien afin de récupérer quelques objets dont celui qui décoincera le squelette...	JOKER#9,JOKERANG#10
+U0453	153	17x9		the giant, forbidden to enter the village by tazaar the magician, due to his drunken behaviour, stops anybody from leaving. to approach him, the dog must be knocked out with the help of the sausage slipped across a hole in the road. only the smell of a hot meal can put the giant in a good form. after that, fingus and winkle can give him a meal.	JOKERANG#0
+U0454	153	17x9		kael advices the gobliins to give the nymph a tasty treat so she will indicate the right mushroom to show to vivalzart, (the music-loving and insomniac heron), so he will open his door. only honey, got by slipping a flower to the bee, will be an acceptable present for interrupting her siesta.	JOKERANG#3
+U0455	153	17x9		carrying the contents of the guards' chest, whose key is to be forged from scrap, using the imprint, the gobliins must lift up the well cover by attaching schwarzy to the hoist. they can do this only by distracting him. while fingus makes the monster's jaws move, winkle talks through his mouth. then schwarzy must be frightened enough to lose balance.	JOKERANG#5
+U0456	153	17x9		the tool in the chest is accessible only through the combined action of the gobliins. winkle opens it with the help of a big starfish, while fingus takes the contents from the top deck. he gets there thanks to the shellfish that wants the fish, which in turn is disturbed by a rudder movement and scared by a moral eel.	JOKERANG#7
+U0457	153	17x9		Prince buffoon, having absorbed a magic mushroom, draws the gobliins into his playful dream. to get him out of the bubble in which the gobliins have emprisoned him, they must find a safety pin, using a cover as a catapult, after standing on it with a bowling ball.	JOKERANG#9
+U0458	153	17x9		le géant, interdit de village par tazaar le magicien, suite à ses excès de beuverie, empêche quiconque de sortir. pour l'approcher il faut momentanément assommer le chien à l'aide du saucisson glissé à travers une ornière de la route. seule une odeur de repas chaud pourra le mettre en de bonnes dispositions. après quoi fingus et winkle pourront lui donner à boire et à manger.	JOKERB#0
+U0459	153	17x9		modemus matérialise fingus et winkle dans le village jouxtant le château investi par amoniak. les villageois y font triste mine. Seul le notable détient un succulent saucisson qu'il protège férocement de la convoitise d'autrui. les deux gobliins doivent se l'approprier. pour ce faire, il faut endormir le notable grâce à une fleur qu'il auront eu soin de faire pousser.	JOKERB#1
+U0460	153	17x9		aux abords du château maudit, tout s'est détraqué. quand on entre par une des portes de l'arbre aux horloges, il est difficile de prévoir par où l'on va ressortir... pour se faire ouvrir la porte de tom, le maître-horloger, il faut attirer l'attention du maire avec un ballon. mais tom ne remettra aux gobliins un exemplaire de son savoir-faire que s'ils remplacent le tic-tac de l'horloge par une mélodie de quelques notes, composée par des musiciens talentueux.	JOKERB#2
+U0461	153	17x9		kael conseille aux gobliins de donner une friandise à la nymphe pour qu'elle indique le bon champignon à montrer à vivalzart, (le héron mélomane et insomniaque) pour qu'il ouvre sa porte. seul du miel, obtenu en glissant une fleur dans le refuge de l'abeille, sera un présent suffisant pour se faire pardonner de la déranger dans sa sieste.	JOKERB#3
+U0462	153	17x9		munis du contenu de l'armoire des gardes, dont la clé aura été forgée dans de la ferraille grâce à son empreinte, les gobliins doivent soulever le couvercle du puits en accrochant schwarzy au palan. ils n'y parviendront qu'en détournant son attention: tandis que fingus actionne la mâchoire du monstre, WINKLE parle par sa bouche. il faudra ensuite effrayer schwarzy pour lui faire perdre l'équilibre...	JOKERB#5
+U0463	153	17x9		pour neutraliser oumkapok, il faut arroser une des boulettes, que lui confectionne le cuisinier, avec l'élixir de gentillesse. pour ce faire, les gobliins doivent déclencher la colère d'oumkapok qui n'aime décidément pas les boulettes trop épicées, et profiter du moment où il empoigne le cuisinier pour glisser une punaise sur la caisse. pour accéder aux punaises il faut scier la chaîne de colibrius. c'est le bonhomme de la marmite qui fournit l'outil.	JOKERB#6
+U0464	153	17x9		L'outil contenu dans le coffre n'est accessible que par l'action combinée des deux gobliins. winkle l'ouvre avec l'aide d'une puissante étoile de mer tandis que fingus en prélèvele contenu depuis le pont avant. il y accède grâce au coquillage qui convoite le poisson, lui-même dérangé par le mouvement du gouvernail et effrayé par une murène.	JOKERB#7
+U0465	153	17x9		Il s'agit de neutraliser amoniak et ses deux acolytes en leur faisant absorber de l'élixir de gentillesse par l'intermédiaire de leur plat favori. pour capturer les cafards, qu'on peut faire sortir de l'oeil en tirant sur la langue tandis qu'on passe par les oreilles, il vaut mieux enfiler un gant. amoniak lui, n'aime que les coccinelles, mais un cafard habilement grimé peut donner le change...	JOKERB#8
+U0466	153	17x9		le Prince bouffon ayant absorbé un champignon soporifique entraine les gobliins dans son rêve ludique. Pour le dégager de la bulle dans laquelle les gobliins auront pris soin de l'emprisonner, ils devront se procurer une épingle en jouant de l'effet de catapulte d'un couvercle, après s'être positionné dessus avec une boule de bowling.	JOKERB#9
+U0467	153	17x9		Pour accéder au royaume des morts il faut trouver chez tazaar la mixture qui, à la bonne température, ouvre toutes les portes. pour cela les gobliins devront énerver quelque peu le magicien afin de récupérer quelques objets dont celui qui décoincera le squelette...	JOKERB#10
+U0468	18	18x1		Fichiers LanguesRéglages	LANG#0,LANG#1
+U0469	19	19x1	GAME MANAGEMENT	GESTION	MENU#1,MENUSPE#1
+U0470	19	19x1	You've got only one joker left!	Manant, il ne te reste qu'un joker!	MENU#2,MENUSPE#2
+U0471	19	19x1	You've got two jokers left!	Gentilhomme, il vous reste deux jokers!	MENU#3,MENUSPE#3
+U0472	19	19x1	You've got three jokers!	Messire joueur, vous avez trois jokers!	MENU#4,MENUSPE#4
+U0473	19	19x1	NOTE-PAD	BLOC-NOTES	MENU#5,MENUSPE#5
+U0474	19	19x1	INVENTORY	INVENTAIRE	MENU#6,MENUSPE#6
+U0475	19	19x1	EXCHANGE OF OBJECTS	ECHANGE D'OBJETS	MENU#7,MENUSPE#7
+U0476	19	19x1	MOVEMENT	DEPLACEMENT	MENU#8,MENUSPE#8
+U0477	19	19x1	OPTIONS	REGLAGES	MENU#9,MENUSPE#9
+U0478	19	19x1	You've got no jokers left!	Triste hère, tu n'as plus de jokers!!!	MENU#11,MENUSPE#11
+U0479	19	19x1	You haven't got any joker here!	Le sort ne t'accorde pas de joker ici !!	MENU#12,MENUSPE#12

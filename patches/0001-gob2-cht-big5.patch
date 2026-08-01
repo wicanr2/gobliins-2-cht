@@ -1,0 +1,1137 @@
+diff --git a/engines/gob/cht.cpp b/engines/gob/cht.cpp
+new file mode 100644
+index 00000000..e9e2d8bd
+--- /dev/null
++++ b/engines/gob/cht.cpp
+@@ -0,0 +1,258 @@
++/* ScummVM - Graphic Adventure Engine
++ *
++ * ScummVM is the legal property of its developers, whose names
++ * are too numerous to list here. Please refer to the COPYRIGHT
++ * file distributed with this source distribution.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation, either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ */
++
++// getenv 在 ScummVM 是禁用符號，要單獨開例外
++#define FORBIDDEN_SYMBOL_EXCEPTION_getenv
++#define FORBIDDEN_SYMBOL_EXCEPTION_fopen
++#define FORBIDDEN_SYMBOL_EXCEPTION_fwrite
++#define FORBIDDEN_SYMBOL_EXCEPTION_fclose
++#define FORBIDDEN_SYMBOL_EXCEPTION_sprintf
++#define FORBIDDEN_SYMBOL_EXCEPTION_FILE
++
++#include <stdlib.h>
++#include <stdio.h>
++
++#include "common/file.h"
++#include "common/debug.h"
++#include "graphics/big5.h"
++
++#include "gob/cht.h"
++#include "gob/gob.h"
++#include "gob/surface.h"
++
++namespace Gob {
++
++Cht::Cht() : _enabled(false), _logText(false), _dumpSpr(nullptr), _font(nullptr) {
++	const char *env = getenv("GOB_LOG_TEXT");
++	_logText = env && *env && *env != '0';
++
++	_dumpSpr = getenv("GOB_DUMP_SPR");
++	if (_dumpSpr && !*_dumpSpr)
++		_dumpSpr = nullptr;
++}
++
++uint32 Cht::signature(const byte *sprBuf, int16 w, int16 h) {
++	// 內容簽章：尺寸 + 前 256 byte 的滾動 checksum。
++	// 用內容而不是資源 id —— id 會隨關卡變動，同一張圖的位元組不會。
++	uint32 sum = ((uint32)(uint16)w << 16) ^ (uint32)(uint16)h;
++	for (int i = 0; i < 256; i++)
++		sum = sum * 31 + sprBuf[i];
++	return sum;
++}
++
++void Cht::dumpSprite(const Surface &dest, const byte *sprBuf, int16 w, int16 h,
++                     int16 x, int16 y) const {
++	if (!_dumpSpr || w <= 0 || h <= 0)
++		return;
++	if (x < 0 || y < 0 || x + w > dest.getWidth() || y + h > dest.getHeight())
++		return;
++
++	char path[512];
++	sprintf(path, "%s/spr_%08x_%dx%d.raw", _dumpSpr, signature(sprBuf, w, h), w, h);
++	FILE *f = fopen(path, "wb");
++	if (!f)
++		return;
++	for (int16 row = 0; row < h; row++)
++		fwrite(dest.getData(x, y + row), 1, (size_t)w * dest.getBPP(), f);
++	fclose(f);
++}
++
++bool Cht::replaceSprite(Surface &dest, const byte *sprBuf, int16 w, int16 h,
++                        int16 x, int16 y) const {
++	if (!_enabled || _cels.empty() || w <= 0 || h <= 0)
++		return false;
++
++	const uint32 sig = signature(sprBuf, w, h);
++	Common::HashMap<uint32, Common::Array<byte> >::const_iterator it = _cels.find(sig);
++	if (it == _cels.end())
++		return false;
++
++	const Common::Array<byte> &px = it->_value;
++	if ((int)px.size() != w * h)
++		return false;
++	if (x < 0 || y < 0 || x + w > dest.getWidth() || y + h > dest.getHeight())
++		return false;
++
++	// 0xFF = 保持原樣（讓沒改到的部分透出原圖）
++	for (int16 row = 0; row < h; row++) {
++		byte *d = dest.getData(x, y + row);
++		for (int16 col = 0; col < w; col++) {
++			const byte v = px[(size_t)row * w + col];
++			if (v != 0xFF)
++				d[col * dest.getBPP()] = v;
++		}
++	}
++	return true;
++}
++
++Cht::~Cht() {
++	delete _font;
++}
++
++int Cht::charHeight() const {
++	return _font ? _font->getFontHeight() : 0;
++}
++
++Common::String Cht::normKey(const char *text) {
++	Common::String out;
++	bool pendingSpace = false;
++	bool seenNonSpace = false;
++
++	for (const char *p = text; *p; p++) {
++		byte c = (byte)*p;
++		// \r \n \t 一律當空白 —— 遊戲腳本裡的字串會夾雜這些
++		if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
++			if (seenNonSpace)
++				pendingSpace = true;
++			continue;
++		}
++		if (pendingSpace) {
++			out += ' ';
++			pendingSpace = false;
++		}
++		out += (char)c;
++		seenNonSpace = true;
++	}
++
++	return out;
++}
++
++void Cht::init(const Common::String &fontFile, const Common::String &tsvFile) {
++	Common::File f;
++
++	if (!f.open(Common::Path(fontFile))) {
++		debugC(1, kDebugFileIO, "CHT: 找不到字型 %s，維持原文", fontFile.c_str());
++		return;
++	}
++
++	_font = new Graphics::Big5Font();
++	// [HARD] 高度要跟字型檔實際的每字步幅一致。倚天 16×15 的字模每字只有 15 列，
++	// 傳 16 會讓第 N 個字偏 2N bytes ——「有些字對、有些變別的字、越後面越亂」，
++	// 而且字型涵蓋率檢查照樣回報 100%。烘字型時用 --lo-pad-height 16 補到 16 列。
++	_font->loadPrefixedRaw(f, 16);
++	f.close();
++	_enabled = true;
++
++	Common::File t;
++	if (!t.open(Common::Path(tsvFile))) {
++		warning("CHT: 有字型但找不到譯文表 %s，只會畫得出中文、不會翻譯", tsvFile.c_str());
++		return;
++	}
++
++	int n = 0;
++	while (!t.eos()) {
++		Common::String line = t.readLine();
++		if (line.empty() || line[0] == '#')
++			continue;
++
++		const char *tab = strchr(line.c_str(), '\t');
++		if (!tab)
++			continue;
++
++		Common::String key(line.c_str(), tab - line.c_str());
++		Common::String val(tab + 1);
++		if (val.empty())
++			continue;
++
++		_map[normKey(key.c_str())] = val;
++		n++;
++	}
++	t.close();
++
++	debug(1, "CHT: 字型 %s 已載入(高 %d)，譯文 %d 則", fontFile.c_str(), charHeight(), n);
++
++	// 烘進美術的中文點陣（可選）。格式："CHTS" u16 版本 u16 筆數，
++	// 每筆 u32 簽章 + u16 寬 + u16 高 + 寬*高 個索引（0xFF = 保持原樣）。
++	Common::File c;
++	if (c.open(Common::Path("gob1_cels.dat"))) {
++		char magic[5] = {0};
++		c.read(magic, 4);
++		if (!strcmp(magic, "CHTS")) {
++			c.readUint16LE();                       // 版本
++			const uint16 count = c.readUint16LE();
++			for (uint16 i = 0; i < count; i++) {
++				const uint32 sig = c.readUint32LE();
++				const uint16 w = c.readUint16LE();
++				const uint16 h = c.readUint16LE();
++				Common::Array<byte> px;
++				px.resize((uint32)w * h);
++				c.read(px.begin(), (uint32)w * h);
++				_cels[sig] = px;
++			}
++			debug(1, "CHT: 美術置換 %d 筆", count);
++		}
++		c.close();
++	}
++}
++
++const char *Cht::translate(const char *text) const {
++	if (!_enabled || !text || !*text)
++		return nullptr;
++
++	Common::HashMap<Common::String, Common::String>::const_iterator it =
++		_map.find(normKey(text));
++	if (it == _map.end())
++		return nullptr;
++
++	return it->_value.c_str();
++}
++
++bool Cht::drawChar(Surface &dest, uint16 big5, int16 x, int16 y, byte color) const {
++	if (!_font)
++		return false;
++
++	const int16 w = dest.getWidth();
++	const int16 h = dest.getHeight();
++	if (x < 0 || y < 0 || x >= w || y >= h)
++		return false;
++
++	// Big5Font 的 maxX/maxY 是「從落點算起還剩多少空間」，不是絕對座標。
++	return _font->drawBig5Char(dest.getData(x, y), big5,
++	                           w - x, h - y,
++	                           (uint32)w * dest.getBPP(),
++	                           color, 0, false, dest.getBPP());
++}
++
++void Cht::logDrawn(const char *text, bool hit) const {
++	if (!_logText || !text || !*text)
++		return;
++
++	// 用 \t 分欄，直接餵得進 skeleton 產生器
++	debug("[GOBTEXT]\t%s\t%s", hit ? "HIT" : "MISS", text);
++}
++
++int Cht::stringWidth(const char *text, int asciiWidth) const {
++	int width = 0;
++
++	for (const byte *p = (const byte *)text; *p; ) {
++		if (isBig5Lead(p[0]) && isBig5Trail(p[1])) {
++			width += kCharWidth;
++			p += 2;
++		} else {
++			width += asciiWidth;
++			p += 1;
++		}
++	}
++
++	return width;
++}
++
++} // End of namespace Gob
+diff --git a/engines/gob/cht.h b/engines/gob/cht.h
+new file mode 100644
+index 00000000..1e504df9
+--- /dev/null
++++ b/engines/gob/cht.h
+@@ -0,0 +1,141 @@
++/* ScummVM - Graphic Adventure Engine
++ *
++ * ScummVM is the legal property of its developers, whose names
++ * are too numerous to list here. Please refer to the COPYRIGHT
++ * file distributed with this source distribution.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation, either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ */
++
++/*
++ * 繁體中文化支援(Gobliiins 1)。
++ *
++ * 為什麼是這個做法:
++ *   GOB 的 Font 是「單位元組定寬點陣字」(video.h 的 Font,取字介面全是 uint8 c,
++ *   _startItem/_endItem 也是 uint8),結構上裝不下 Big5,而整個 engines/gob 沒有
++ *   任何 CJK 路徑可以接。所以走旁路:Big5 字元交給 Graphics::Big5Font 畫,
++ *   單位元組字元仍走原本的 Font,兩者在繪字迴圈裡分流。
++ *
++ *   不去改 Font 的介面,是因為 GOB 引擎養了十幾款遊戲(Gobliiins 2/3、Woodruff、
++ *   Playtoons…),動 uint8 c 會全部牽動。
++ *
++ * 中文的啟用條件是「字型檔存在」,不是 ScummVM 的 --language。
++ *   理由同 AGI 軌:gob1 的偵測表本身就分五種語言(EN/DE/FR/IT/ES),而語言是
++ *   遊戲資料的維度,拿它兼作中文開關會互相打架。
++ */
++
++#ifndef GOB_CHT_H
++#define GOB_CHT_H
++
++#include "common/str.h"
++#include "common/hashmap.h"
++#include "common/hash-str.h"
++#include "common/array.h"
++
++namespace Graphics {
++class Big5Font;
++}
++
++namespace Gob {
++
++class Surface;
++
++class Cht {
++public:
++	Cht();
++	~Cht();
++
++	/** 載入字型與譯文表。字型載入成功才算啟用。 */
++	void init(const Common::String &fontFile, const Common::String &tsvFile);
++
++	bool enabled() const { return _enabled; }
++
++	/**
++	 * 內容為 key 查表。查到回中文,查不到回 nullptr(呼叫端露原文)。
++	 * 回傳的指標指向表內的字串,生命期與本物件相同 —— 這點很重要:
++	 * Draw::_textToPrint 會直接持有指標,不能給它區域變數。
++	 */
++	const char *translate(const char *text) const;
++
++	/** 是否為 Big5 前導位元組。 */
++	static bool isBig5Lead(byte c) { return c >= 0xA1 && c <= 0xF9; }
++	/** 是否為 Big5 後續位元組。 */
++	static bool isBig5Trail(byte c) {
++		return (c >= 0x40 && c <= 0x7E) || (c >= 0xA1 && c <= 0xFE);
++	}
++
++	/** 中文字的顯示寬度(像素)。 */
++	int charWidth() const { return kCharWidth; }
++	int charHeight() const;
++
++	/**
++	 * 在 gob 的 Surface 上畫一個 Big5 字。回傳是否畫出來(字型缺字就回 false)。
++	 */
++	bool drawChar(Surface &dest, uint16 big5, int16 x, int16 y, byte color) const;
++
++	/** 一個字串在中文模式下的顯示寬度,單位元組字元用 asciiWidth 計。 */
++	int stringWidth(const char *text, int asciiWidth) const;
++
++	/**
++	 * GOB_LOG_TEXT=1 時，把引擎「實際要畫出去」的每個字串印出來。
++	 *
++	 * 為什麼需要這個:靜態從 .TOT 抽到的字串，與執行期真正送進繪字迴圈的字串
++	 * 不一定相同(腳本會拼接、會補空白、會被控制碼切段)。而查表是以執行期那一份
++	 * 為準 —— SQ1 VGA 漏掉 67 則核心文字就是這種落差，三支檢查工具全測不到，
++	 * 最後是實機截圖比對才抓到的。
++	 * 這支 log 同時是抽字的來源與「翻譯有沒有命中」的驗證。
++	 */
++	bool logText() const { return _logText; }
++	void logDrawn(const char *text, bool hit) const;
++
++	/**
++	 * 烘進美術裡的英文（按鈕、招牌）中文化。
++	 *
++	 * 做法沿用 SQ1 的教訓：**不要重編整支資源檔**投進遊戲目錄 —— 重編出來的檔
++	 * 會把沒改到的原版美術一起複製一份，等於在 patch 包裡散布遊戲資源。
++	 * 改成執行期置換：畫完之後把我們自己畫的點陣蓋上去，交付檔案裡只有自畫像素。
++	 *
++	 * 定位用「內容簽章」(寬,高,前 256 byte 的 checksum) 而不是資源 id ——
++	 * id 會隨關卡變動，內容不會。
++	 */
++	bool replaceSprite(Surface &dest, const byte *sprBuf, int16 w, int16 h,
++	                   int16 x, int16 y) const;
++
++	/** GOB_DUMP_SPR=<dir> 時，把畫出去的每一張 sprite 存成索引點陣。 */
++	const char *dumpSpriteDir() const { return _dumpSpr; }
++	void dumpSprite(const Surface &dest, const byte *sprBuf, int16 w, int16 h,
++	                int16 x, int16 y) const;
++
++	static uint32 signature(const byte *sprBuf, int16 w, int16 h);
++
++	static const int kCharWidth = 16;
++
++private:
++	/** 空白正規化:連續空白收斂成單一空格 + 去頭尾。建表與查表兩邊都要套。 */
++	static Common::String normKey(const char *text);
++
++	bool _enabled;
++	bool _logText;
++	const char *_dumpSpr;
++	// 簽章 → 置換點陣（寬,高,像素）
++	Common::HashMap<uint32, Common::Array<byte> > _cels;
++	Common::HashMap<uint32, uint32> _celDims;
++	Graphics::Big5Font *_font;
++	Common::HashMap<Common::String, Common::String> _map;
++};
++
++} // End of namespace Gob
++
++#endif // GOB_CHT_H
+diff --git a/engines/gob/draw.h b/engines/gob/draw.h
+index 186147b5..7c117303 100644
+--- a/engines/gob/draw.h
++++ b/engines/gob/draw.h
+@@ -263,10 +263,28 @@ public:
+ 
+ 	Draw_v1(GobEngine *vm);
+ 	~Draw_v1() override {}
++
++protected:
++	/**
++	 * 繁中化:把一則 TOT 文字整段收成單一字串(換行用 \n)。
++	 *
++	 * 為什麼不以「一行」為查表單位:原作的文字流會被控制碼切成碎片,實測看到
++	 * 「Ce sorcie」「r nous」這種切在字中間的段(遊戲靠重新定位做微調對齊)。
++	 * 以行為 key 既對不齊、也沒意義。更重要的是中文的斷行位置本來就跟法文／
++	 * 英文不同 —— 整段拿來翻、再自己重新斷行置中,才是對的做法(rulebook 81)。
++	 */
++	virtual Common::String chtCollectTotText(const byte *ptr) const;
++
++	/** 繁中化:在訊息框內自行斷行 + 置中畫出中文。 */
++	void chtPrintTotText(const char *text, int16 left, int16 top,
++	                     int16 right, int16 bottom, byte color);
+ };
+ 
+ class Draw_v2 : public Draw_v1 {
+ public:
++	/** 繁中化:v2 的文字流控制碼跟 v1 差很多,要自己收。 */
++	Common::String chtCollectTotText(const byte *ptr) const override;
++
+ 	void initScreen() override;
+ 	void closeScreen() override;
+ 	void blitCursor() override;
+diff --git a/engines/gob/draw_v1.cpp b/engines/gob/draw_v1.cpp
+index e63210a6..0d5b18b4 100644
+--- a/engines/gob/draw_v1.cpp
++++ b/engines/gob/draw_v1.cpp
+@@ -27,9 +27,11 @@
+ 
+ #include "common/endian.h"
+ #include "common/str.h"
++#include "common/array.h"
+ #include "graphics/cursorman.h"
+ 
+ #include "gob/gob.h"
++#include "gob/cht.h"
+ #include "gob/draw.h"
+ #include "gob/global.h"
+ #include "gob/util.h"
+@@ -151,6 +153,145 @@ void Draw_v1::animateCursor(int16 cursor) {
+ 	_cursorY = newY;
+ }
+ 
++Common::String Draw_v1::chtCollectTotText(const byte *ptr) const {
++	Common::String out;
++	int16 lastY = -1;
++
++	for (const byte *p = ptr; *p != 1; ) {
++		if (*p == 3) {          // 換字型／顏色
++			p += 2;
++		} else if (*p == 2) {   // 重新定位:Y 變了才算換行
++			int16 y = (int16)READ_LE_UINT16(p + 3);
++			if (lastY >= 0 && y != lastY)
++				out += '\n';
++			lastY = y;
++			p += 5;
++		} else if (*p == 0xBA) { // 變數代入,用佔位符留住位置
++			out += "%s";
++			p++;
++		} else {
++			out += (char)*p;
++			p++;
++		}
++	}
++
++	return out;
++}
++
++void Draw_v1::chtPrintTotText(const char *text, int16 left, int16 top,
++                              int16 right, int16 bottom, byte color) {
++	const int kMargin  = 2;
++	const int chW      = Cht::kCharWidth;
++	const int chH      = _vm->_cht->charHeight();
++	// 行距不另加空隙：倚天 16×15 的字模本身上下已留白，再加只是浪費垂直空間。
++	// 訊息框是遊戲美術的一部分、改不了大小，能調的只有行距與譯文長度。
++	const int lineStep = chH;
++
++	const int boxW  = right - left + 1;
++	const int boxH  = bottom - top + 1;
++	const int availW = MAX(boxW - 2 * kMargin, chW);
++
++	// --- 斷行:以顯示欄寬計算,不是以 byte 數 -------------------------------
++	// 中文一字佔 kCharWidth，ASCII 佔原字型寬。原文的換行(\n)是硬換行，
++	// 其餘照容得下的寬度自己斷。
++	Common::Array<Common::String> lines;
++	Common::String cur;
++	int curW = 0;
++	const int asciiW = _fonts[_fontIndex] ? _fonts[_fontIndex]->getCharWidth() : 6;
++
++	for (const byte *p = (const byte *)text; *p; ) {
++		if (*p == '\n') {
++			lines.push_back(cur);
++			cur.clear();
++			curW = 0;
++			p++;
++			continue;
++		}
++
++		int w;
++		Common::String piece;
++		if (Cht::isBig5Lead(p[0]) && Cht::isBig5Trail(p[1])) {
++			piece = Common::String((const char *)p, 2);
++			w = chW;
++			p += 2;
++		} else {
++			piece = Common::String((const char *)p, 1);
++			w = asciiW;
++			p += 1;
++		}
++
++		if (curW + w > availW && !cur.empty()) {
++			lines.push_back(cur);
++			cur.clear();
++			curW = 0;
++		}
++		cur += piece;
++		curW += w;
++	}
++	if (!cur.empty())
++		lines.push_back(cur);
++
++	// --- 垂直置中 ---------------------------------------------------------
++	// 塞不下就從頂端開始，寧可下緣被切也不要整段往上飄出框外。
++	const int totalH = (int)lines.size() * lineStep;
++	int y = top + MAX((boxH - totalH) / 2, 0);
++
++	Surface &surf = *_spritesArray[_destSurface];
++
++	// [HARD] 有一大類框比中文字本身還矮。二代最常見的那種是畫面最底的名稱列
++	// （320×10 @ y=190，共 800 多則），10 px 高容不下 15 px 的倚天字模。
++	// 這種框**一定**會垂直溢出，那是 CJK 的物理限制、不是譯文太長；
++	// 唯一要防的是「溢出到畫面外被切掉半個字」——往上推到剛好放得下即可。
++	// 二代底部本來就是一條純色狀態列，往上推 5 px 仍落在同一條色帶內。
++	const int surfH = surf.getHeight();
++	if (y + totalH > surfH)
++		y = MAX(surfH - totalH, 0);
++
++
++	// [HARD] 溢位要出聲，但只對「譯文太長」出聲。訊息框是遊戲美術、大小改不了，
++	// 譯文只要長一點就會多排一行 —— 而畫面上看起來只是「字壓到框邊」，
++	// 巡查時很容易當成正常。這裡印出「需要幾列 vs 有幾列」，讓它變成可以 grep
++	// 的 pass/fail 訊號。
++	// 允許列數取 max(boxH / lineStep, 1)：矮框至少能放一行，不然 800 多則名稱列
++	// 會全部報「容得下 0 行」，訊號被自己淹掉、失去意義。
++	const int maxLines = MAX(boxH / lineStep, 1);
++	if ((int)lines.size() > maxLines)
++		warning("[CHTFIT] 譯文溢出訊息框: 需要 %d 行、框內只容得下 %d 行 (框 %dx%d px, 一行 %d 字) — %s",
++		        (int)lines.size(), maxLines, boxW, boxH, availW / chW, text);
++
++	for (uint i = 0; i < lines.size(); i++, y += lineStep) {
++		const char *line = lines[i].c_str();
++		const int lineW = _vm->_cht->stringWidth(line, asciiW);
++		int x = left + MAX((boxW - lineW) / 2, 0);
++
++		for (const byte *p = (const byte *)line; *p; ) {
++			if (Cht::isBig5Lead(p[0]) && Cht::isBig5Trail(p[1])) {
++				_vm->_cht->drawChar(surf, (uint16)((p[0] << 8) | p[1]),
++				                    (int16)x, (int16)y, color);
++				x += chW;
++				p += 2;
++			} else {
++				if (_fonts[_fontIndex])
++					_fonts[_fontIndex]->drawLetter(surf, *p, (int16)x, (int16)y,
++					                               color, _backColor, 1);
++				x += asciiW;
++				p += 1;
++			}
++		}
++	}
++
++	// [決定] 重繪範圍**維持宣告的框**，不擴大到實際畫到的區域。
++	//
++	// 二代畫面最底那條名稱列（320×10 @ y=190，共 800 多則）在原版英文下就是
++	// 幾乎看不見的 —— 它壓在橘色狀態列的下緣，字大半被蓋掉，跑英文版對照確認過。
++	// 上面的垂直夾制會把中文往上推 6 px；如果連重繪範圍一起擴大，那條在中文版
++	// 就變成「看得見一半」，疊在對白列上像破圖，反而比原版糟。
++	//
++	// 只夾制、不擴大重繪，等於：字整個落在畫布內（不會有寫出界的半個字），
++	// 但畫面上的可見程度與英文原版一致。這是刻意的，不是漏改。
++	dirtiedRect(_destSurface, left, top, right, bottom);
++}
++
+ void Draw_v1::printTotText(int16 id) {
+ 	byte *dataPtr;
+ 	byte *ptr, *ptrEnd;
+@@ -233,6 +374,42 @@ void Draw_v1::printTotText(int16 id) {
+ 	}
+ 	ptrEnd++;
+ 
++	// --- 繁中化：整段查表 ---------------------------------------------------
++	// 查到就完全接管這一則的排版（自己斷行、自己置中），查不到就原封不動走下去。
++	// 這樣中文不會被原文的斷行位置綁住，也不必去修遊戲腳本算好的座標。
++	if (_vm->_cht && (_vm->_cht->enabled() || _vm->_cht->logText())) {
++		Common::String full = chtCollectTotText(ptr);
++		const char *zh = _vm->_cht->translate(full.c_str());
++		_vm->_cht->logDrawn(full.c_str(), zh != nullptr);
++
++		if (zh && _vm->_cht->enabled()) {
++			// 這一則用的顏色：取第一個 cmd==3 帶的前景色
++			byte color = (byte)_frontColor;
++			for (const byte *p = ptr; *p != 1; ) {
++				if (*p == 3) {
++					color = p[1] & 0xF;
++					break;
++				}
++				p += (*p == 2) ? 5 : 1;
++			}
++
++			chtPrintTotText(zh, destX, destY, spriteRight, spriteBottom, color);
++
++			delete textItem;
++			_renderFlags = savedFlags;
++
++			if (_renderFlags & RENDERFLAG_COLLISIONS)
++				_vm->_game->_hotspots->check(0, 0);
++
++			if ((_renderFlags & RENDERFLAG_CAPTUREPOP) && *_vm->_scenery->_pCaptureCounter != 0) {
++				(*_vm->_scenery->_pCaptureCounter)--;
++				_vm->_game->capturePop(1);
++			}
++
++			return;
++		}
++	}
++
+ #ifdef USE_TTS
+ 	Common::String ttsMessage;
+ #endif
+@@ -431,24 +608,74 @@ void Draw_v1::spriteOperation(int16 operation, bool ttsAddHotspotText) {
+ 		}
+ 
+ 		font = _fonts[_fontIndex];
++
++		// --- 繁中化 -----------------------------------------------------
++		// gob1 的文字全部走這條路(o1_printText 從 script 位元流逐字讀進
++		// _textToPrint，再 spriteOperation(DRAW_PRINTTEXT))，所以這裡是唯一
++		// 要動的咽喉點，不必去改 Font 的 uint8 介面(那會牽動所有 GOB 遊戲)。
++		//
++		// [HARD] translate() 回傳的指標指向譯文表內的字串，生命期與 Cht 相同。
++		// 不可以在這裡組區域字串再取 c_str() —— _textToPrint 會變懸空指標。
++		if (_vm->_cht) {
++			const char *zh = _vm->_cht->translate(_textToPrint);
++			_vm->_cht->logDrawn(_textToPrint, zh != nullptr);
++			if (zh)
++				_textToPrint = zh;
++		}
++
+ 		len = strlen(_textToPrint);
+-		dirtiedRect(_destSurface, _destSpriteX, _destSpriteY,
+-				_destSpriteX + len * font->getCharWidth() - 1,
+-				_destSpriteY + font->getCharHeight() - 1);
++		{
++			const bool cht = _vm->_cht && _vm->_cht->enabled();
++			const int pxWidth = cht ? _vm->_cht->stringWidth(_textToPrint, font->getCharWidth())
++			                        : len * font->getCharWidth();
++			// 中文字比原字型高，會往上長出 _destSpriteY 之外（見下面的繪字迴圈），
++			// 髒矩形要跟著往上擴，否則標記的範圍對不上實際畫到的範圍。
++			// 註：道具名上緣被切的那個 bug **不是**這裡造成的（改了這裡像素完全
++			// 沒變，是實測比對出來的），根因在繪字迴圈的 dy。這一段留著是為了讓
++			// 「標記的髒區」與「畫到的區域」一致，不是那個 bug 的修法。
++			const int chtDy = cht ? MIN<int>(0, (font->getCharHeight() - _vm->_cht->charHeight()) / 2) : 0;
++			const int pxHeight = cht ? MAX<int>(font->getCharHeight() - chtDy,
++			                                    _vm->_cht->charHeight())
++			                         : font->getCharHeight();
++
++			dirtiedRect(_destSurface, _destSpriteX, _destSpriteY + chtDy,
++					_destSpriteX + pxWidth - 1, _destSpriteY + chtDy + pxHeight - 1);
+ 
+ #ifdef USE_TTS
+-		if (ttsAddHotspotText) {
+-			_vm->_game->_hotspots->addHotspotTTSText(_textToPrint, _destSpriteX, _destSpriteY,
+-											_destSpriteX + len * font->getCharWidth() - 1,
+-											_destSpriteY + font->getCharHeight() - 1, _destSurface);
+-		}
++			if (ttsAddHotspotText) {
++				_vm->_game->_hotspots->addHotspotTTSText(_textToPrint, _destSpriteX, _destSpriteY,
++												_destSpriteX + pxWidth - 1,
++												_destSpriteY + pxHeight - 1, _destSurface);
++			}
+ #endif
+ 
+-		for (int i = 0; i < len; i++) {
+-			font->drawLetter(*_spritesArray[_destSurface], _textToPrint[i],
+-					_destSpriteX, _destSpriteY, _frontColor, _backColor, _transparency);
++			for (int i = 0; i < len; ) {
++				const byte c0 = (byte)_textToPrint[i];
++				const byte c1 = (byte)_textToPrint[i + 1];
++
++				if (cht && Cht::isBig5Lead(c0) && Cht::isBig5Trail(c1)) {
++					// 倚天 16×15 比原字型高（實測 gob1 這條路的字型是 8 px），
++					// 多出來的高度一定要往某個方向長。原本用「基線」對齊、整個
++					// 往上長 8 px，結果道具名條那裡遊戲只重繪 y≈170 以下 →
++					// 上緣 4 列畫得出來卻送不上螢幕，「鑽石」的字頭整個不見。
++					// （逐像素比對字型檔與實機截圖才抓到；三支檢查工具全綠。）
++					// 改成上下各長一半：兩邊各只溢出 4 px，都落在可見範圍內，
++					// 靠近畫面上緣的文字也不會因為往上跑太多而整字消失。
++					const int16 dy = (int16)((font->getCharHeight() - _vm->_cht->charHeight()) / 2);
++					_vm->_cht->drawChar(*_spritesArray[_destSurface],
++							(uint16)((c0 << 8) | c1),
++							_destSpriteX, _destSpriteY + dy, _frontColor);
++
++					_destSpriteX += Cht::kCharWidth;
++					i += 2;
++				} else {
++					font->drawLetter(*_spritesArray[_destSurface], c0,
++							_destSpriteX, _destSpriteY, _frontColor, _backColor, _transparency);
+ 
+-			_destSpriteX += font->getCharWidth();
++					_destSpriteX += font->getCharWidth();
++					i += 1;
++				}
++			}
+ 		}
+ 		break;
+ 
+diff --git a/engines/gob/draw_v2.cpp b/engines/gob/draw_v2.cpp
+index 261c4fe5..9b1f17fb 100644
+--- a/engines/gob/draw_v2.cpp
++++ b/engines/gob/draw_v2.cpp
+@@ -31,6 +31,7 @@
+ 
+ #include "gob/gob.h"
+ #include "gob/draw.h"
++#include "gob/cht.h"
+ #include "gob/global.h"
+ #include "gob/util.h"
+ #include "gob/game.h"
+@@ -187,6 +188,65 @@ void Draw_v2::animateCursor(int16 cursor) {
+ 	_showCursor &= ~1;
+ }
+ 
++// --- 繁中化:把一則 TOT 文字收成單一字串 -----------------------------------
++//
++// v2 的文字流跟 v1 差很多,照 v1 的讀法會收到垃圾。控制碼(照本函式下方
++// printTotText 的字元迴圈):
++//   1        結束
++//   2 / 5    重新定位(+4 bytes offX/offY)→ Y 變了才算換行
++//   3        字型+顏色(+1)      4  前景色(+1)
++//   6        可點文字(+1 colCmd;bit7 再吃 2、bit6 再吃 8)
++//   7/8/9    colCmd 歸零 / 遮罩開關
++//   10       索引參照(+1 個數,每個再吃 2)
++//   186      變數代入 → 記成 %s
++//   其餘     字面字元
++//
++// [HARD] 這裡的收字邏輯必須跟 tools/extract_gob2_texts.py 逐條一致,
++//        否則 key 對不起來、實機查表就 MISS —— 靜態檢查全綠、實機卻沒翻。
++Common::String Draw_v2::chtCollectTotText(const byte *ptr) const {
++	Common::String out;
++	int16 lastY = 0;
++	bool  haveY = false;
++	int   guard = 0;
++
++	while (*ptr != 1) {
++		if (++guard > 20000)
++			break;
++
++		const byte cmd = *ptr;
++
++		if ((cmd == 2) || (cmd == 5)) {
++			const int16 y = (int16)READ_LE_UINT16(ptr + 3);
++			if (haveY && (y != lastY))
++				out += '\n';
++			lastY = y;
++			haveY = true;
++			ptr += 5;
++		} else if ((cmd == 3) || (cmd == 4)) {
++			ptr += 2;
++		} else if (cmd == 6) {
++			const byte colCmd = ptr[1];
++			ptr += 2;
++			if (colCmd & 0x80)
++				ptr += 2;
++			if (colCmd & 0x40)
++				ptr += 8;
++		} else if ((cmd == 7) || (cmd == 8) || (cmd == 9)) {
++			ptr += 1;
++		} else if (cmd == 10) {
++			ptr += 2 + ptr[1] * 2;
++		} else if (cmd == 186) {
++			out += "%s";
++			ptr += 1;
++		} else {
++			out += (char)cmd;
++			ptr += 1;
++		}
++	}
++
++	return out;
++}
++
+ void Draw_v2::printTotText(int16 id) {
+ 	byte *dataPtr;
+ 	byte *ptr, *ptrEnd;
+@@ -376,6 +436,57 @@ void Draw_v2::printTotText(int16 id) {
+ 	}
+ 	ptrEnd++;
+ 
++	// --- 繁中化:整段查表 ---------------------------------------------------
++	// 查到就完全接管這一則的排版。**一定要接管到底**,不能只換字串讓引擎自己排——
++	// v2 的字元迴圈有三處按 byte 計算的東西會把 Big5 劈成半個字:
++	//   ① width = strlen(str) * charWidth   雙位元組寬度高估一倍
++	//   ② str[strlen(str)-1] = '\0'         截斷時一刀砍在 byte 上
++	//   ③ 遮罩迴圈 _destSpriteX = strPos * charWidth + offX  按 byte 索引定位
++	if (_vm->_cht && (_vm->_cht->enabled() || _vm->_cht->logText())) {
++		Common::String full = chtCollectTotText(ptr);
++		const char *zh = _vm->_cht->translate(full.c_str());
++		_vm->_cht->logDrawn(full.c_str(), zh != nullptr);
++
++		if (zh && _vm->_cht->enabled()) {
++			// 這一則用的顏色:取第一個 cmd==3 帶的前景色(低 4 位元)
++			byte color = (byte)_frontColor;
++			for (const byte *p = ptr; *p != 1; ) {
++				const byte c = *p;
++				if (c == 3) {
++					color = p[1] & 0x0F;
++					break;
++				} else if (c == 5 || c == 2) {
++					p += 5;
++				} else if (c == 4) {
++					p += 2;
++				} else if (c == 6) {
++					const byte colCmd = p[1];
++					p += 2;
++					if (colCmd & 0x80) p += 2;
++					if (colCmd & 0x40) p += 8;
++				} else if (c == 10) {
++					p += 2 + p[1] * 2;
++				} else {
++					p += 1;
++				}
++			}
++
++			chtPrintTotText(zh, destX, destY, spriteRight, spriteBottom, color);
++
++			delete textItem;
++			_renderFlags = savedFlags;
++
++			if (_renderFlags & RENDERFLAG_COLLISIONS) {
++				_vm->_game->_hotspots->check(0, 0);
++				if (*_vm->_scenery->_pCaptureCounter != 0) {
++					(*_vm->_scenery->_pCaptureCounter)--;
++					_vm->_game->capturePop(1);
++				}
++			}
++			return;
++		}
++	}
++
+ 	int16 fontIndex = 0, frontColor = 0;
+ 	int16 strPos = 0, strPos2 = -1, strPosBak;
+ 	int16 offX = 0, offY = 0;
+@@ -829,6 +940,71 @@ void Draw_v2::spriteOperation(int16 operation, bool ttsAddHotspotText) {
+ 		//             See this function for details.
+ 		fixLittleRedStrings();
+ 
++		// --- 繁中化:短字串(道具名、介面)的查表與 Big5 繪字 -------------------
++		// 長對白走 printTotText 那條(整段接管);這裡處理引擎逐段丟過來的字串。
++		if (_vm->_cht) {
++			const char *zh = _vm->_cht->translate(_textToPrint);
++			_vm->_cht->logDrawn(_textToPrint, zh != nullptr);
++			if (zh)
++				_textToPrint = zh;
++		}
++
++		if (_vm->_cht && _vm->_cht->enabled()) {
++			bool hasBig5 = false;
++			for (const byte *p = (const byte *)_textToPrint; p[0] && p[1]; p++) {
++				if (Cht::isBig5Lead(p[0]) && Cht::isBig5Trail(p[1])) {
++					hasBig5 = true;
++					break;
++				}
++			}
++
++			if (hasBig5) {
++				if ((_fontIndex >= kFontCount) || !_fonts[_fontIndex]) {
++					warning("Trying to print \"%s\" with undefined font %d", _textToPrint, _fontIndex);
++					break;
++				}
++
++				Font *chtFont = _fonts[_fontIndex];
++				const int pxW = _vm->_cht->stringWidth(_textToPrint, chtFont->getCharWidth());
++				// 中文字比原字型高,多出來的高度上下各長一半。整個往上長會撞到
++				// 只重繪某條線以下的區域,上緣會被削掉(一代踩過,字頭整個不見)。
++				int dy = (chtFont->getCharHeight() - _vm->_cht->charHeight()) / 2;
++				const int pxH = MAX<int>(chtFont->getCharHeight() - dy, _vm->_cht->charHeight());
++
++				// [HARD] 二代畫面最底那條名稱列(320×10 @ y=190)比中文字模還矮,
++				// 照原座標畫會有 5 px 掉到 320×200 畫布外、被硬切掉半個字。
++				// 往上推到剛好容得下 —— 那條本來就是一整條純色狀態列,推 5 px
++				// 仍落在同一條色帶內,比切掉字好得多。
++				// 一代沒踩到是因為它的對白在畫面中央的捲軸裡,不貼邊。
++				// dy **可以是負的**：字要往上推才進得了畫面。原本寫成 MAX(…, 0)
++				// 等於「只准往下、不准往上」，那條列在 y=197 就完全推不動，
++				// 15 px 的字只露出最上面 3 px —— 畫面上看起來像一排白色碎點。
++				const int surfH2 = _spritesArray[_destSurface]->getHeight();
++				if (_destSpriteY + dy + _vm->_cht->charHeight() > surfH2)
++					dy = MAX<int>(surfH2 - _vm->_cht->charHeight(), 0) - _destSpriteY;
++
++				dirtiedRect(_destSurface, _destSpriteX, _destSpriteY + dy,
++						_destSpriteX + pxW - 1, _destSpriteY + dy + pxH - 1);
++
++				for (const byte *p = (const byte *)_textToPrint; *p; ) {
++					if (Cht::isBig5Lead(p[0]) && Cht::isBig5Trail(p[1])) {
++						_vm->_cht->drawChar(*_spritesArray[_destSurface],
++								(uint16)((p[0] << 8) | p[1]),
++								_destSpriteX, (int16)(_destSpriteY + dy), _frontColor);
++						_destSpriteX += Cht::kCharWidth;
++						p += 2;
++					} else {
++						chtFont->drawLetter(*_spritesArray[_destSurface], *p,
++								_destSpriteX, _destSpriteY, _frontColor,
++								_backColor, _transparency);
++						_destSpriteX += chtFont->getCharWidth();
++						p += 1;
++					}
++				}
++				break;
++			}
++		}
++
+ 		len = strlen(_textToPrint);
+ 		left = _destSpriteX;
+ 
+diff --git a/engines/gob/gob.cpp b/engines/gob/gob.cpp
+index 42e39380..0abfa394 100644
+--- a/engines/gob/gob.cpp
++++ b/engines/gob/gob.cpp
+@@ -25,6 +25,13 @@
+  *
+  */
+ 
++// 驗證用：GOB_FORCE_LANG 直接覆寫遊戲內語言碼。
++// [HARD] FORBIDDEN_SYMBOL_EXCEPTION_* 必須在任何 include 之前 ——
++// common/forbidden.h 是被第一個 include 間接拉進來的，晚一步就失效。
++#define FORBIDDEN_SYMBOL_EXCEPTION_getenv
++
++#include <stdlib.h>
++
+ #include "common/debug-channels.h"
+ 
+ #include "backends/audiocd/audiocd.h"
+@@ -39,6 +46,7 @@
+ #include "gui/widget.h"
+ 
+ #include "gob/gob.h"
++#include "gob/cht.h"
+ #include "gob/global.h"
+ #include "gob/hotspots.h"
+ #include "gob/util.h"
+@@ -128,6 +136,7 @@ GobEngine::GobEngine(OSystem *syst) : Engine(syst), _rnd("gob") {
+ 	_map       = nullptr; _palAnim  = nullptr; _scenery = nullptr;
+ 	_draw      = nullptr; _util     = nullptr; _video   = nullptr;
+ 	_saveLoad  = nullptr; _preGob   = nullptr;
++	_cht       = nullptr;
+ 
+ 	_pauseStart = 0;
+ 
+@@ -313,6 +322,19 @@ Common::Error GobEngine::run() {
+ 	if (err.getCode() != Common::kNoError)
+ 		return err;
+ 
++	// 繁中化：靠「字型檔存在」啟用，不動 ScummVM 的 --language
++	//（gob1 偵測表本身就分五種語言，拿語言兼作中文開關會打架）。
++	// 檔名依作品分開,一份引擎可以同時支援多代:放哪一代的資料就跑哪一代的中文。
++	_cht = new Cht();
++	switch (getGameType()) {
++	case kGameTypeGob2:
++		_cht->init("gob2_big5.fnt", "gob2_cht.tsv");
++		break;
++	default:
++		_cht->init("gob1_big5.fnt", "gob1_cht.tsv");
++		break;
++	}
++
+ 	// On some systems it's not safe to run CD audio games from the CD.
+ 	if (isCD()) {
+ 		if (!existExtractedCDAudioFiles()
+@@ -387,6 +409,18 @@ Common::Error GobEngine::run() {
+ 		_global->_language = kLanguageBritish;
+ 		break;
+ 	}
++
++	// 驗證／中文化用：直接指定遊戲內語言碼。
++	// gob1 的腳本靠變數 16(= _global->_language)挑語言區塊，但偵測表的英文條目是
++	// EN_USA → kLanguageAmerican(5)，而 gob1 的腳本只認 0–4 —— 「英文版」實際會
++	// 顯示法文。這個逃生口用來把語言釘死，中文化的譯文 key 才有穩定的來源語言。
++	{
++		const char *forceLang = getenv("GOB_FORCE_LANG");
++		if (forceLang && *forceLang) {
++			_global->_language = (int16)atoi(forceLang);
++			debug("GOB_FORCE_LANG: 語言碼強制為 %d", _global->_language);
++		}
++	}
+ 	_global->_languageWanted = _global->_language;
+ 
+ #ifdef USE_TTS
+@@ -750,6 +784,7 @@ void GobEngine::deinitGameParts() {
+ 	delete _mult;      _mult = nullptr;
+ 	delete _vidPlayer; _vidPlayer = nullptr;
+ 	delete _game;      _game = nullptr;
++	delete _cht;       _cht = nullptr;
+ 	delete _global;    _global = nullptr;
+ 	delete _goblin;    _goblin = nullptr;
+ 	delete _init;      _init = nullptr;
+diff --git a/engines/gob/gob.h b/engines/gob/gob.h
+index eabde573..7d740ed9 100644
+--- a/engines/gob/gob.h
++++ b/engines/gob/gob.h
+@@ -94,6 +94,7 @@ namespace Gob {
+ 
+ class Game;
+ class Sound;
++class Cht;
+ class Video;
+ class Global;
+ class Draw;
+@@ -210,6 +211,8 @@ public:
+ 	bool _enableAdibou2FreeBananasWorkaround;
+ 	bool _enableAdibou2FlowersInfiniteLoopWorkaround;
+ 
++	Cht *_cht;
++
+ 	Global *_global;
+ 	Util *_util;
+ 	DataIO *_dataIO;
+diff --git a/engines/gob/metaengine.cpp b/engines/gob/metaengine.cpp
+index 2d6c8b58..d565ed79 100644
+--- a/engines/gob/metaengine.cpp
++++ b/engines/gob/metaengine.cpp
+@@ -1,3 +1,8 @@
++// 驗證用：GOB_START_TOT 可指定起始關卡(見 initGame)
++#define FORBIDDEN_SYMBOL_EXCEPTION_getenv
++
++#include <stdlib.h>
++
+ /* ScummVM - Graphic Adventure Engine
+  *
+  * ScummVM is the legal property of its developers, whose names
+@@ -149,6 +154,13 @@ void GobEngine::initGame(const GOBGameDescription *gd) {
+ 	else
+ 		_startTot = gd->startTotBase;
+ 
++	// 驗證用逃生口：直接從指定關卡開始，不必等 130 秒片頭 + 過關。
++	// 例：GOB_START_TOT=avt005.tot（那一關才有劇情旁白文字）。
++	// 正式遊玩不會設這個變數，所以不影響玩家。
++	const char *startOverride = getenv("GOB_START_TOT");
++	if (startOverride && *startOverride)
++		_startTot = startOverride;
++
+ 	if (gd->startStkBase == nullptr)
+ 		_startStk = "intro.stk";
+ 	else
+diff --git a/engines/gob/module.mk b/engines/gob/module.mk
+index b64b2558..26f67b37 100644
+--- a/engines/gob/module.mk
++++ b/engines/gob/module.mk
+@@ -6,6 +6,7 @@ MODULE_OBJS := \
+ 	backbuffer.o \
+ 	cheater.o \
+ 	cheater_geisha.o \
++	cht.o \
+ 	cmpfile.o \
+ 	console.o \
+ 	databases.o \
+diff --git a/engines/gob/video.cpp b/engines/gob/video.cpp
+index 9f637fbf..ef03dad2 100644
+--- a/engines/gob/video.cpp
++++ b/engines/gob/video.cpp
+@@ -35,6 +35,7 @@
+ 
+ #include "gob/gob.h"
+ #include "gob/video.h"
++#include "gob/cht.h"
+ #include "gob/global.h"
+ #include "gob/util.h"
+ #include "gob/dataio.h"
+@@ -382,10 +383,24 @@ void Video::drawPackedSprite(byte *sprBuf, int16 width, int16 height,
+ 		return;
+ 	}
+ 
+-	if (spriteUncompressor(sprBuf, width, height, x, y, transp, dest))
++	if (spriteUncompressor(sprBuf, width, height, x, y, transp, dest)) {
++		chtPostDraw(sprBuf, width, height, x, y, dest);
+ 		return;
++	}
+ 
+ 	drawPacked(sprBuf, width, height, x, y, transp, dest);
++	chtPostDraw(sprBuf, width, height, x, y, dest);
++}
++
++// 繁中化：圖畫完之後才動手。掛在這裡的好處是不管走 spriteUncompressor 還是
++// drawPacked 都吃得到，也不必去碰兩種壓縮格式的解碼。
++void Video::chtPostDraw(const byte *sprBuf, int16 width, int16 height,
++                        int16 x, int16 y, Surface &dest) {
++	if (!_vm->_cht)
++		return;
++	if (_vm->_cht->dumpSpriteDir())
++		_vm->_cht->dumpSprite(dest, sprBuf, width, height, x, y);
++	_vm->_cht->replaceSprite(dest, sprBuf, width, height, x, y);
+ }
+ 
+ void Video::drawPackedSprite(const char *path, Surface &dest, int width) {
+diff --git a/engines/gob/video.h b/engines/gob/video.h
+index 1aca3d94..493f2213 100644
+--- a/engines/gob/video.h
++++ b/engines/gob/video.h
+@@ -132,6 +132,9 @@ public:
+ 	void drawPackedSprite(byte *sprBuf, int16 width, int16 height,
+ 			int16 x, int16 y, int16 transp, Surface &dest);
+ 	void drawPackedSprite(const char *path, Surface &dest, int width = 320);
++	/** 繁中化：sprite 畫完後的置換／dump 掛點。 */
++	void chtPostDraw(const byte *sprBuf, int16 width, int16 height,
++	                 int16 x, int16 y, Surface &dest);
+ 
+ 	void setPalColor(byte *pal, byte red, byte green, byte blue) {
+ 		pal[0] = red << 2;
