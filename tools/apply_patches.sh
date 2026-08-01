@@ -28,5 +28,9 @@ grep -q "cht.o" "$TARGET/engines/gob/module.mk" \
   || { echo "### module.mk 沒有 cht.o，patch 沒套成功 ###"; exit 4; }
 grep -q "chtPostDraw" "$TARGET/engines/gob/video.cpp" \
   || { echo "### video.cpp 沒有 chtPostDraw，patch 沒套完整 ###"; exit 5; }
+# 二代的文字流跟一代不同，走的是 Draw_v2 自己那份收字與整段接管。
+# 少了它 draw_v1 的部分照樣編得過，但實機一句都不會翻。
+grep -q "Draw_v2::chtCollectTotText" "$TARGET/engines/gob/draw_v2.cpp" \
+  || { echo "### draw_v2.cpp 沒有 chtCollectTotText，patch 沒套完整 ###"; exit 6; }
 
 echo ">> patch 套用完成並通過檢查"
