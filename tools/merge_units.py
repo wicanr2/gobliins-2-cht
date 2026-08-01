@@ -168,6 +168,19 @@ def main():
             for _lang, text in langmap.items():
                 out[E.norm(text)] = zh[uid]
 
+    # 側檔以外、寫死在 script 裡的字串（見 extra.tsv 的檔頭說明）
+    extra_path = os.path.join(tdir, "extra.tsv")
+    n_extra = 0
+    if os.path.exists(extra_path):
+        for line in open(extra_path, encoding="utf-8"):
+            line = line.rstrip("\n")
+            if not line.strip() or line.lstrip().startswith("#") or "\t" not in line:
+                continue
+            k, v = line.split("\t", 1)
+            out[E.norm(k)] = v.strip()
+            n_extra += 1
+        print(f"另外併入 script 內嵌字串 {n_extra} 則")
+
     path = os.path.join(tdir, "translation.tsv")
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("# 由 tools/merge_units.py 從 translation/out/*.tsv 產生，"

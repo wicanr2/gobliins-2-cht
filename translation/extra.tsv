@@ -1,0 +1,16 @@
+# 側檔以外、直接寫死在 script（.tot）裡的字串：原文<TAB>譯文
+#
+# 抽字器只掃六種語言的側檔，掃不到這些。找法是對 *.TOT 做可讀字串掃描，
+# 再扣掉已在譯文表裡的 —— 剩下的多半是二進位雜訊，人工挑出真的句子。
+#
+# 本作掃出來只有工作人員名單這一組（MENU.TOT / MENUSPE.TOT）。
+# 其餘命中都不是玩家看得到的：
+#   - MENU.CAT / MENUSPE.CAT 是 DOS 原版的存讀檔選單資源，ScummVM 不讀它（自己有 GUI）
+#   - REGLAGE.TOT 是顯示模式設定畫面的法文全字母句，ScummVM 不跑那支
+#
+# 人名不翻，只翻職稱。原文用空白對齊成 29 欄，中文一字佔兩欄，
+# 照抄空白會歪 —— 改成單一空格即可，反正這幾行是各自置中畫的。
+PROGRAMMING Roland LACOSTE	程式 Roland LACOSTE
+MUSIC Charles CALLET	音樂 Charles CALLET
+GRAPHICS Pierre GILHODES	美術 Pierre GILHODES
+TEXT Muriel TRAMIS	文字 Muriel TRAMIS
