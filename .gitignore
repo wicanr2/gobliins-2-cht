@@ -1,0 +1,20 @@
+# [HARD] 遊戲資源一律不入庫
+game/
+*.stk
+*.STK
+*.lic
+*.trk
+*.flac
+*.BIN
+*.cue
+*.ROM
+# 建置與交付產物
+build/
+dist-all/
+dist-patch/
+out/
+scummvm-src/
+scummvm-win/
+*.AppImage
+*.mp4
+*.gif
