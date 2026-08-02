@@ -220,6 +220,7 @@ make -j"$(nproc)"
 ## 相關專案
 
 - [頑皮小精靈（一代）繁體中文化](https://github.com/wicanr2/gobliiins-1-cht)
+- [頑皮小精靈3 繁體中文化](https://github.com/wicanr2/goblins-3-cht)
 
 ## 授權與權利
 
